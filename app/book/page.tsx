@@ -7,29 +7,41 @@ import { useQuery } from "@tanstack/react-query";
 import { BookListResponse } from "./interface";
 import { axiosClient } from "@/lib/axiousClient";
 import { dateUtil } from "@/utils";
+import useBookModule from "./lib";
+import { Drawer } from "@/components/Drawer";
+import { useClosure } from "@/hook/useClosure";
+import Button from "@/components/Button";
+import Filter from "./module/filter";
 
 const Book = () => {
-  const getBookList = async (): Promise<BookListResponse> => {
-    return axiosClient.get("/book/list").then((res) => {
-      console.log("res", res);
-      return res.data;
-    });
-  };
-
-  const { data, isFetching, isLoading } = useQuery(
-    ["/book/list"],
-    () => getBookList(),
-    {
-      select: (response) => response,
-    }
-  );
+  const { useBookList } = useBookModule();
+  const { isOpen, onOpen, onClose } = useClosure();
+  const { data, isFetching,filterParams, params, handlePage, handlePageSize,setParams,handleFilter,handleClear } =
+    useBookList();
 
   console.log("data", data);
   console.log("isFetching", isFetching);
+  console.log("params", params);
   return (
     <>
-      <section className="container px-4 mx-auto">
-        {isFetching? 'loading':''}
+      <Drawer
+      
+        title="Filter buku"
+        isOpen={isOpen}
+        onClose={onClose}
+        onClear={handleClear}
+        onSubmit={handleFilter}
+      >
+        <Filter params={params} setParams={setParams} ></Filter>
+      </Drawer>
+      {JSON.stringify(params)}
+      <section className="container px-4 mx-auto pt-10 ">
+        {isFetching ? "loading" : ""}
+        <div className="grid grid-cols-5 gap-5 py-5">
+          <Button title="filter" onClick={onOpen} colorSchema="blue"></Button>
+          <Button title="filter" onClick={onOpen} colorSchema="red" ></Button>
+
+        </div>
         <Table>
           <Thead>
             <Tr>
@@ -40,7 +52,7 @@ const Book = () => {
                     className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
                   />
                   <button className="flex items-center gap-x-2">
-                    <span>Invoice</span>
+                    <span>No</span>
                     <svg
                       className="h-3"
                       viewBox="0 0 10 11"
@@ -83,7 +95,7 @@ const Book = () => {
             {data?.data?.map((item, index) => (
               <Tr key={index}>
                 <Td>
-                  <span>{index +1}</span>
+                  <span>{index + 1}</span>
                 </Td>
                 <Td>
                   <span>{item.title}</span>
@@ -104,6 +116,13 @@ const Book = () => {
             ))}
           </Tbody>
         </Table>
+        <Pagination
+          page={params.page}
+          pageSize={params.pageSize}
+          handlePageSize={handlePageSize}
+          handlePage={handlePage}
+          pagination={data?.pagination}
+        />
       </section>
     </>
   );

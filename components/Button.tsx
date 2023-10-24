@@ -23,7 +23,7 @@ const Button: React.FC<
   colorSchema,
   width = "full",
   height = "md",
-  isLoading = false,
+  isLoading = true,
   ...props
 }) => {
   return (
