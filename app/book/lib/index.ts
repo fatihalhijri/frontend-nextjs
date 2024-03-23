@@ -1,10 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
-import { BookListFilter, BookListResponse } from "../interface";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  BookCreateArrayPayload,
+  BookCreatePayload,
+  BookCreateResponse,
+  BookDeleteArrayPayload,
+  BookDetailResponse,
+  BookListFilter,
+  BookListResponse,
+  BookUpdatePayload,
+  FormArrayPayload,
+  UjianCreateArrayPayload,
+} from "../interface";
 import { axiosClient } from "@/lib/axiousClient";
 import { ChangeEvent, useState } from "react";
+import { Pagination } from "@/components/Pagination";
+import { usePagination } from "@/hook/usePagination";
+import Swal from "sweetalert2";
+import { useToast } from "@/hook/useToast";
 
 const useBookModule = () => {
-  const defaultParams = {
+  const queryClient = useQueryClient();
+  const {toastError,toastSuccess,toastWarning} = useToast();
+  const defaultParams:BookListFilter = {
     page: 1,
     pageSize: 10,
     title: "",
@@ -21,47 +38,17 @@ const useBookModule = () => {
       .then((res) => res.data);
   };
   const useBookList = () => {
-    let [params, setParams] = useState<BookListFilter>(defaultParams);
-    let [filterParams, setFilterParams] =
-      useState<BookListFilter>(defaultParams);
+    const {
+      params,
+      setParams,
+      handleFilter,
+      handleClear,
+      handlePageSize,
+      handlePage,
+      filterParams,
+    } = usePagination(defaultParams);
 
-      
-    const handleFilter = () => {
-      setFilterParams(()=>{
-        return {
-          ...params,
-          page:1
-        };
-      });
-      setParams((prevParams)=>{
-        return{
-          ...prevParams,
-          page:1
-        }
-      })
-    };
-
-
-    const handleClear = () => {
-      setFilterParams(defaultParams);
-      setParams(defaultParams);
-    };
-
-    const handlePageSize = (e: ChangeEvent<any>) => {
-      console.log("event", e.target.value);
-      setParams((params) => ({ ...params, pageSize: e.target.value, page: 1 }));
-      setFilterParams((params) => ({
-        ...params,
-        pageSize: e.target.value,
-        page: 1,
-      }));
-    };
-
-    const handlePage = (page: number) => {
-      setParams((params) => ({ ...params, page: page }));
-      setFilterParams((params) => ({ ...params, page: page }));
-    };
-    const { data, isFetching, isLoading } = useQuery(
+    const { data, isFetching, isLoading, isError } = useQuery(
       ["/book/list", [filterParams]],
       () => getBookList(filterParams),
       {
@@ -85,7 +72,147 @@ const useBookModule = () => {
     };
   };
 
-  return { useBookList };
+  // const createBook = (
+  //   payload: BookCreatePayload
+  // ): Promise<BookCreateResponse> => {
+  //   return axiosClient.post(`/book/create`, payload).then((res) => res.data);
+  // };
+
+  const useCreateBook = () => {
+    const { mutate, isLoading } = useMutation(
+      (payload: BookCreatePayload) => {
+        return axiosClient.post("/book/create", payload);
+      },
+      {
+        onSuccess: (response) => {
+          toastSuccess(response.data.message);
+        },
+        onError: (error) => {
+          toastError();
+        },
+      }
+    );
+    return { mutate, isLoading };
+  };
+
+  // const updateBook = (
+  //   payload: BookUpdatePayload,
+  //   id: number
+  // ): Promise<BookCreateResponse> => {
+  //   return axiosClient
+  //     .put(`/book/update/${id}`, payload)
+  //     .then((res) => res.data);
+  // };
+
+  const useUpdateBook = (id: number) => {
+    const { isLoading, mutate } = useMutation(
+      (payload: BookUpdatePayload) => {
+        return axiosClient.put(`/book/update/${id}`, payload);
+      },
+      {
+        onSuccess: (response) => {
+          toastSuccess(response.data.message);
+          queryClient.invalidateQueries(["/book/detail"]);
+        },
+
+        onError: (error) => {
+          toastError();
+        },
+      }
+    );
+    return { mutate, isLoading };
+  };
+
+  
+  
+  
+  const useDetailBook = (id: string) => {
+    const { data, isLoading, isFetching } = useQuery(
+      ["/book/detail", { id }],
+      () => getDetailBook(id),
+      {
+        select: (response) => response,
+      }
+    );
+
+    return { data, isFetching, isLoading };
+  };
+
+  const getDetailBook = async (id: string): Promise<BookDetailResponse> => {
+    return axiosClient.get(`/book/detail/${id}`).then((res) => res.data.data);
+  };
+  
+
+  const useDeleteBook = () => {
+    const { mutate, isLoading } = useMutation(
+      (id: number) => {
+        return axiosClient.delete(`/book/delete/${id}`);
+      },
+      {
+        onSuccess: (response) => {
+          toastSuccess(response.data.message);
+          queryClient.invalidateQueries(["/book/list"]);
+        },
+        onError: (error: any) => {
+          if (error.response.status == 422) {
+            toastWarning(error.response.data.message);
+          } else {
+            toastError();
+          }
+        },
+      }
+    );
+
+    return { mutate, isLoading };
+  };
+
+  const useCreateBulkBook = () => {
+    const { mutate, isLoading } = useMutation(
+      (payload: BookCreateArrayPayload) => {
+        return axiosClient.post("/book/create/bulk", payload);
+      },
+      {
+        onSuccess: (response) => {
+          toastSuccess(response.data.message);
+        },
+        onError: (error) => {
+          toastError();
+        },
+      }
+    );
+    return { mutate, isLoading };
+  };
+
+  const useDeleteBulkBook = () => {
+    const { mutate, isLoading } = useMutation(
+      (payload: BookDeleteArrayPayload) => {
+        return axiosClient.post("/book/delete/bulk", payload);
+      },
+      {
+        onSuccess: (response) => {
+          toastSuccess(response.data.message);
+
+          queryClient.invalidateQueries(["/book/list"]);
+        },
+        onError: (error) => {
+          toastError();
+        },
+      }
+    );
+    return { mutate, isLoading };
+  };
+  
+
+ 
+  return {
+    useBookList,
+    useCreateBook,
+    useDetailBook,
+    useUpdateBook,
+    useDeleteBook,
+    useDeleteBulkBook,
+    useCreateBulkBook
+  };
 };
 
 export default useBookModule;
