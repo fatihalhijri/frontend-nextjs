@@ -155,6 +155,7 @@ const Book = () => {
               <Th scope="col">judul</Th>
               <Th scope="col">Penulis</Th>
               <Th scope="col">Tahun</Th>
+              <Th scope="col">Cover</Th>
               <Th scope="col">Tanggal Dibuat</Th>
               <Th scope="col">Tanggal diperbarui</Th>
 
@@ -185,13 +186,16 @@ const Book = () => {
                   <span>{(params.page - 1) * params.pageSize + index + 1}</span>
                 </Td>
                 <Td>
-                  <span>{item.title}</span>
+                  <span>{item.judul}</span>
                 </Td>
                 <Td>
-                  <span>{item.author}</span>
+                  <span>{item.penulis}</span>
                 </Td>
                 <Td>
-                  <span>{item.year}</span>
+                  <span>{item.tahun_terbit}</span>
+                </Td>
+                <Td>
+                  <span>{item.cover}</span>
                 </Td>
                 <Td>
                   <span>{dateUtil.formatDateTime(item.created_at)}</span>
@@ -216,6 +220,7 @@ const Book = () => {
             ))}
           </Tbody>
         </Table>
+        
         <Pagination
           page={params.page}
           pageSize={params.pageSize}

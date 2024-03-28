@@ -10,13 +10,13 @@ import Button from "@/components/Button";
 import useAuthModule from "../lib";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GoogleButton from 'react-google-button'
 
 
-export const registerSchema = yup.object().shape({
-  email: yup
+export const loginSchema = yup.object().shape({
+  username: yup
     .string()
     .nullable()
     .default("")
@@ -31,11 +31,13 @@ export const registerSchema = yup.object().shape({
 });
 
 const Login = () => {
+  const [isEmailActive, setIsEmailActive] = useState(false)
+  const [isPasswordActive, setIsPasswordActive] = useState(false)
   const { useLogin } = useAuthModule();
-  const { mutate, isLoading } = useLogin();
+  const { mutate, isLoading, isError,error} = useLogin();
   const formik = useFormik<LoginPayload>({
-    initialValues: registerSchema.getDefault(),
-    validationSchema: registerSchema,
+    initialValues: loginSchema.getDefault(),
+    // validationSchema: loginSchema,
     enableReinitialize: true,
     onSubmit: (payload) => {
       mutate(payload);
@@ -43,6 +45,9 @@ const Login = () => {
   });
   const { handleChange, handleSubmit, handleBlur, values, errors } = formik;
   
+  const errorMessage = isError ? error.response?.data.messsage || [] : []
+  const emailError = errorMessage.find((msg:any) =>msg.includes('username'));
+  const passwordError = errorMessage.find((msg:any) => msg.includes('password'))
   // const { data: session } = useSession();
   // const router = useRouter();
   
@@ -63,16 +68,18 @@ const Login = () => {
       <FormikProvider value={formik}>
         <Form className="space-y-5" onSubmit={handleSubmit}>
           <section>
-            <Label htmlFor="email" title="Email" />
+            <Label htmlFor="email" title="Username" />
             <InputText
-              value={values.email}
+              value={values.username}
               placeholder="exampel@email.com"
-              id="email"
-              name="email"
+              id="username"
+              name="username"
               onChange={handleChange}
-              onBlur={handleBlur}
-              isError={getIn(errors, "email")}
-              messageError={getIn(errors, "email")}
+              // onBlur={handleBlur}
+              // isError={getIn(errors, "username")}
+              // messageError={getIn(errors, "username")}
+              isError={isEmailActive ? emailError : null}
+              messageError={isEmailActive ? emailError : null}
             />
           </section>
           <section>
@@ -85,9 +92,11 @@ const Login = () => {
               name="password"
               type="password"
               onChange={handleChange}
-              onBlur={handleBlur}
-              isError={getIn(errors, "password")}
-              messageError={getIn(errors, "password")}
+              // onBlur={handleBlur}
+              // isError={getIn(errors, "password")}
+              // messageError={getIn(errors, "password")}
+              isError={isPasswordActive ? passwordError : null}
+              messageError={isPasswordActive ? passwordError : null}
             />
           </section>
           <section>
@@ -104,9 +113,9 @@ const Login = () => {
           </section>
         </Form>
       </FormikProvider>
-      <section className="m-3">
+      {/* <section className="m-3">
         <GoogleButton onClick={() => signIn('google', { role: 'siswa' })}/>
-      </section>
+      </section> */}
     </section>
   );
 };

@@ -64,7 +64,7 @@ const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
       setParams((prevParams: BookListFilter) => {
         return {
           ...prevParams,
-          from_year: value,
+          dari_tahun: value,
           to_year: "",
         };
       });
@@ -83,41 +83,58 @@ const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
 
   return (
     <section className="space-y-2">
-      <section>
-        <Label title="Title" htmlFor="title" />
+      {/* <section>
+        <Label title="search" htmlFor="search" />
         <InputText
           // onChange={handleChange}
           onChange={(e) => {
             setParams((prevParams: BookListFilter) => {
               return {
                 ...prevParams,
-                title: e.target.value,
+                search: e.target.value,
               };
             });
           }}
-          value={params.title}
-          name="title"
-          id="title"
+          value={params.search}
+          name="search" 
+          id="search"
+        />
+      </section> */}
+      <section>
+        <Label title="Judul" htmlFor="judul" />
+        <InputText
+          // onChange={handleChange}
+          onChange={(e) => {
+            setParams((prevParams: BookListFilter) => {
+              return {
+                ...prevParams,
+                judul: e.target.value,
+              };
+            });
+          }}
+          value={params.judul}
+          name="judul"
+          id="judul"
         />
       </section>
       <section>
-        <Label title="Author" htmlFor="author" />
+        <Label title="Penulis" htmlFor="penulis" />
         <InputText
           onChange={(e) => {
             setParams((prevParams: BookListFilter) => {
               return {
                 ...prevParams,
-                author: e.target.value,
+                penulis: e.target.value,
               };
             });
           }}
-          value={params.author}
-          name="author"
-          id="author"
+          value={params.penulis}
+          name="penulis"
+          id="penulis"
         />
       </section>
       <section>
-        <Label title="from_year" htmlFor="from_year" />
+        <Label title="Dari_tahun" htmlFor="from_year" />
         <Select
           onChange={handleChange}
           options={option}
@@ -127,7 +144,7 @@ const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
         />
       </section>
       <section>
-        <Label title="to_year" htmlFor="to_year" />
+        <Label title="Ke_tahun" htmlFor="to_year" />
         <Select
           onChange={handleChange}
           options={option}

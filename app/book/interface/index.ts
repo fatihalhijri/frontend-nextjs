@@ -2,9 +2,13 @@ import { BaseResponsePagination } from "@/lib/axiousClient";
 
 interface Book {
   id: number;
-  title: string;
-  author: string;
-  year: number | undefined | string;
+  judul: string;
+  penulis: string;
+  tahun_terbit: number | undefined | string;
+  harga: number  ;
+  cover: string  ;
+  deskripsi: string  ;
+  search:string;
   created_at: string;
   updated_at: string;
 }
@@ -50,8 +54,10 @@ export interface BookListFilter extends Partial<Book> {
   page: number;
   pageSize: number;
 }
+// export interface BookCreatePayload
+//   extends Pick<Book, "author" | "title" | "year"> {}
 export interface BookCreatePayload
-  extends Pick<Book, "author" | "title" | "year"> {}
+  extends Pick<Book, "penulis" | "judul" | "tahun_terbit" |'harga' |'cover'|'deskripsi'> {}
 
 export interface BookCreateResponse {
   status: string;

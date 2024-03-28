@@ -31,7 +31,7 @@ const UpdateProfile = () => {
   const formik = useFormik<any>({
     initialValues: {
       nama: data?.data?.nama,
-      avatar: data?.data?.avatar,
+      avatar: data?.data?.cover,
       file: undefined,
       id: data?.data?.id,
     },

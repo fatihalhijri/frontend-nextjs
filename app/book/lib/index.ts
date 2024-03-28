@@ -17,15 +17,20 @@ import { Pagination } from "@/components/Pagination";
 import { usePagination } from "@/hook/usePagination";
 import Swal from "sweetalert2";
 import { useToast } from "@/hook/useToast";
+import { ProfileResponse, ProfileUpdatePayload } from "@/app/auth/interface";
+import useAxiosAuth from "@/hook/useAxiousAuth";
+import useUploadFile from "@/hook/useUploadFile";
 
 const useBookModule = () => {
   const queryClient = useQueryClient();
   const {toastError,toastSuccess,toastWarning} = useToast();
+  const axiosAuthClient = useAxiosAuth();
+  const {uploadSingle} = useUploadFile();
   const defaultParams:BookListFilter = {
     page: 1,
     pageSize: 10,
-    title: "",
-    author: "",
+    judul: "",
+    penulis: "",
     from_year: "",
     to_year: "",
   };
@@ -201,6 +206,49 @@ const useBookModule = () => {
     );
     return { mutate, isLoading };
   };
+  const updateProfile = async (
+    payload: ProfileUpdatePayload
+  ): Promise<ProfileResponse> => {
+    if (payload.file !== undefined) {
+      const res = await uploadSingle(payload.file);
+      console.log("res", res);
+
+      payload = {
+        ...payload,
+        cover: res.data.file_url,
+      };
+    }
+
+    return axiosAuthClient
+      .put("/book/update", payload)
+      .then((res) => res.data);
+  };
+
+  const useUpdateProfile = () => {
+    const { mutate, isLoading } = useMutation(
+      (payload: ProfileUpdatePayload) => updateProfile(payload),
+      {
+        onSuccess: async (response) => {
+          toastSuccess(response.message);
+          queryClient.invalidateQueries(["/auth/profile"]);
+        },
+        onError: (error: any) => {
+          if (error.response.status == 422) {
+            return toastWarning(error.response.data.message);
+          }
+
+          if (error.response.status == 400) {
+            return toastWarning(error.response.data.message.toString());
+          }
+
+          toastError();
+        },
+      }
+    );
+
+    return { mutate, isLoading };
+  };
+
   
 
  

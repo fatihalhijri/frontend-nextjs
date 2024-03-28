@@ -13,24 +13,31 @@ import * as yup from "yup";
 import useBookModule from "../../lib";
 import { BookCreatePayload, BookUpdatePayload } from "../../interface";
 import { useRouter } from "next/navigation";
+import { createBookSchema } from "../../tambah/page";
+import Image from "next/image";
+import { useQueryClient } from "@tanstack/react-query";
 
-const createBookSchema = yup.object().shape({
-  title: yup.string().nullable().default("").required("Wajib isi"),
-  author: yup.string().nullable().default("").required("Wajib isi"),
-  year: yup.number().nullable().default(undefined).required("Wajib pilih"),
-});
+// const createBookSchema = yup.object().shape({
+//   title: yup.string().nullable().default("").required("Wajib isi"),
+//   author: yup.string().nullable().default("").required("Wajib isi"),
+//   year: yup.number().nullable().default(undefined).required("Wajib pilih"),
+// });
 
 const UpdateBook = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
+  const queryClient = useQueryClient()
   const { useDetailBook, useUpdateBook } = useBookModule();
   const { data, isFetching } = useDetailBook(params.id);
   const { mutate, isLoading } = useUpdateBook(+params.id);
 
   const formik = useFormik<BookUpdatePayload>({
     initialValues: {
-      title: data?.title || "",
-      year: data?.year || "",
-      author: data?.author || "",
+      judul: data?.judul || "",
+      penulis: data?.penulis || "",
+      tahun_terbit: data?.tahun_terbit || "",
+      harga: data?.harga || 0,
+      deskripsi: data?.deskripsi || "",
+      cover: data?.cover || "",
       // id: data?.id,
     },
     validationSchema: createBookSchema,
@@ -83,42 +90,97 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
         <FormikProvider value={formik}>
           <Form className="space-y-5" onSubmit={handleSubmit}>
             <section>
-              <Label htmlFor="title" title="Title" />
+              <Label htmlFor="judul" title="Judul" />
               <InputText
-                value={values.title}
+                value={values.judul}
                 placeholder="Judul Buku"
-                id="title"
-                name="title"
+                id="judul"
+                name="judul"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isError={!!errors.title}
-                messageError={errors.title}
+                isError={!!errors.judul}
+                messageError={errors.judul}
               />
             </section>
             <section>
-              <Label htmlFor="author" title="Auhtor" />
+              <Label htmlFor="penulis" title="penulis" />
               <InputText
-                value={values.author}
+                value={values.penulis}
                 placeholder="Penulis Buku"
-                id="author"
-                name="author"
+                id="penulis"
+                name="penulis"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isError={!!errors.author}
-                messageError={errors.author}
+                isError={!!errors.penulis}
+                messageError={errors.penulis}
               />
             </section>
             <section>
-              <Label htmlFor="year" title="Year" />
+              <Label htmlFor="harga" title="harga" />
+              <InputText
+                value={values.harga}
+                placeholder="harga Buku"
+                id="harga"
+                name="harga"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                isError={!!errors.harga}
+                messageError={errors.harga}
+              />
+            </section>
+            <section className="">
+              <div>
+                <Image
+                  src={values.cover || "/img/profile2.jpg"}
+                  width={70}
+                  height={70}
+                  alt="foto orang"
+                />
+              </div>
+              <input
+                type="file"
+                id="file"
+                onChange={(event: any) => {
+                  const file = event.target.files[0];
+                  console.log("file", file);
+
+                  // if (file.type !== "image/jpeg") {
+                  //   return alert("type tidak sesauai");
+                  // }
+
+                  let reader = new FileReader();
+                  reader.onloadend = () => {
+                    setFieldValue(`cover`, reader.result);
+                  };
+                  reader.readAsDataURL(file);
+                  setFieldValue("file", file);
+                }}
+              />
+            </section>
+            <section>
+              <Label htmlFor="deskripsi" title="deskripsi" />
+              <InputText
+                value={values.deskripsi}
+                placeholder="deskripsi Buku"
+                id="deskripsi"
+                name="deskripsi"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                isError={!!errors.deskripsi}
+                messageError={errors.deskripsi}
+              />
+            </section>
+            <section>
+              <Label htmlFor="tahun_terbit" title="tahun_terbit" />
               <Select
-                value={values.year}
-                id="year"
-                name="year"
+                value={values.tahun_terbit}
+                id="tahun_terbit"
+                name="tahun_terbit"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 options={option}
-                isError={!!errors.year}
-                messageError={errors.year}
+                isError={!!errors.tahun_terbit}
+                messageError={errors.tahun_terbit}
               />
             </section>
             <section>

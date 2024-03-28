@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { Mutation, useMutation, useQuery } from "@tanstack/react-query";
 import {
   LoginPayload,
   LoginResponse,
@@ -78,21 +78,40 @@ const useAuthModule = () => {
   };
 
   const login = async (payload: LoginPayload): Promise<LoginResponse> => {
+    
     return axiosClient.post("/auth/login", payload).then((res) => res.data);
   };
 
   const useLogin = () => {
-    const { mutate, isLoading } = useMutation(
+    const [errorValidation, setErrorValidation] = useState<string[]>([]);
+    const handleTyping = (name: string) => {
+      setErrorValidation((value) => {
+        const filter = value.filter(
+          (item: string) => item?.includes(name) === false
+        );
+        return filter;
+      });
+    };
+
+  const handleShowError = (name: string) => {
+    const message = errorValidation.find((item: string) =>
+      item?.includes(name)
+    );
+    return message;
+  };
+    const { mutate, isLoading ,isError,error} = useMutation(
       (payload: LoginPayload) => login(payload),
+      
       {
+        
         onSuccess: async (response) => {
           console.log("res", response);
           toastSuccess(response.message);
           await signIn("credentials", {
             id: response.data.id,
             name: response.data.nama,
-            role: response.data.role,
-            email: response.data.email,
+            // role: response.data.role,
+            email: response.data.username,
             refreshToken: response.data.refresh_token,
             accessToken: response.data.access_token,
             redirect: false,
@@ -100,21 +119,25 @@ const useAuthModule = () => {
 
           // toastSuccess(response.message);
 
-          if (response.data.role === "admin") {
-            return router.push("/admin");
-          }
-          router.push("/siswa");
+          // if (response.data.role === "admin") {
+          //   return router.push("/admin");
+          // }
+          router.push("/book");
         },
         onError: (error: any) => {
-          if (error.response.status == 422) {
-            toastWarning(error.response.data.message);
-          } else {
-            toastError();
+          console.log("error", error);
+          if (error.response.status === 302) {
+            return toastWarning(error.response.data.message);
           }
+          if (error.response.status === 400) {
+            setErrorValidation(error.response.data.message);
+            return toastWarning(error.response.data.message);
+          }
+          toastError();
         },
       }
     );
-    return { mutate, isLoading };
+    return { mutate, isLoading ,handleShowError,handleTyping,isError,error};
   };
 
   const getProfile = async (): Promise<ProfileResponse> => {
@@ -217,7 +240,7 @@ const useAuthModule = () => {
 
       payload = {
         ...payload,
-        avatar: res.data.file_url,
+        cover: res.data.file_url,
       };
     }
 

@@ -23,9 +23,13 @@ import { option } from "../tambah/page";
 const defaultCatatanArray = {
   data: [
     {
-      title: "",
-      author: "",
-      year: undefined,
+      judul: "",
+      penulis: "",
+      tahun_terbit: undefined,
+      harga: 0,
+      cover:"",
+      deskripsi:""
+      
     },
   ],
 };
@@ -118,58 +122,121 @@ const CreateBook = () => {
                         </section>
                         <section>
                           <Label
-                            htmlFor={`data[${index}]title`}
-                            title="Title"
+                            htmlFor={`data[${index}]judul`}
+                            title="Judul"
                           />
                           <InputText
-                            value={value.title}
+                            value={value.judul}
                             placeholder="Judul Buku"
-                            id={`data[${index}]title`}
-                            name={`data[${index}]title`}
+                            id={`data[${index}]judul`}
+                            name={`data[${index}]judul`}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             isError={
-                              getIn(errors?.data?.[index], "title") &&
-                              getIn(touched?.data?.[index], "title")
+                              getIn(errors?.data?.[index], "judul") &&
+                              getIn(touched?.data?.[index], "judul")
                             }
                             messageError={
-                              getIn(errors?.data?.[index], "title") &&
-                              getIn(touched?.data?.[index], "title")
+                              getIn(errors?.data?.[index], "judul") &&
+                              getIn(touched?.data?.[index], "judul")
                             }
                           />
                         </section>
                         <section>
-                          <Label htmlFor="author" title="Auhtor" />
+                          <Label htmlFor="penulis" title="Penulis" />
                           <InputText
-                            value={value.author}
+                            value={value.penulis}
                             placeholder="Penulis Buku"
-                            id={`data[${index}]author`}
-                            name={`data[${index}]author`}
+                            id={`data[${index}]penulis`}
+                            name={`data[${index}]penulis`}
                             onChange={(e) => {
                               setFieldValue(
-                                `data[${index}]author`,
+                                `data[${index}]penulis`,
                                 e.target.value
                               );
                             }}
                             onBlur={handleBlur}
-                            isError={getIn(errors?.data?.[index], "author")}
+                            isError={getIn(errors?.data?.[index], "penulis")}
                             messageError={getIn(
                               errors?.data?.[index],
-                              "author"
+                              "penulis"
                             )}
                           />
                         </section>
                         <section>
-                          <Label htmlFor="year" title="Year" />
+                          <Label htmlFor="harga" title="harga" />
+                          <InputText
+                            value={value.harga}
+                            placeholder="harga Buku"
+                            id={`data[${index}]harga`}
+                            name={`data[${index}]harga`}
+                            onChange={(e) => {
+                              setFieldValue(
+                                `data[${index}]harga`,
+                                e.target.value
+                              );
+                            }}
+                            onBlur={handleBlur}
+                            isError={getIn(errors?.data?.[index], "penulis")}
+                            messageError={getIn(
+                              errors?.data?.[index],
+                              "penulis"
+                            )}
+                          />
+                        </section>
+                        <section>
+                          <Label htmlFor="cover" title="cover" />
+                          <InputText
+                            value={value.cover}
+                            placeholder="cover Buku"
+                            id={`data[${index}]cover`}
+                            name={`data[${index}]cover`}
+                            onChange={(e) => {
+                              setFieldValue(
+                                `data[${index}]cover`,
+                                e.target.value
+                              );
+                            }}
+                            onBlur={handleBlur}
+                            isError={getIn(errors?.data?.[index], "cover")}
+                            messageError={getIn(
+                              errors?.data?.[index],
+                              "cover"
+                            )}
+                          />
+                        </section>
+                        <section>
+                          <Label htmlFor="deskripsi" title="deskripsi" />
+                          <InputText
+                            value={value.deskripsi}
+                            placeholder="deskripsi Buku"
+                            id={`data[${index}]deskripsi`}
+                            name={`data[${index}]deskripsi`}
+                            onChange={(e) => {
+                              setFieldValue(
+                                `data[${index}]deskripsi`,
+                                e.target.value
+                              );
+                            }}
+                            onBlur={handleBlur}
+                            isError={getIn(errors?.data?.[index], "deskripsi")}
+                            messageError={getIn(
+                              errors?.data?.[index],
+                              "deskripsi"
+                            )}
+                          />
+                        </section>
+                        <section>
+                          <Label htmlFor="tahun_terbit" title="tahun_terbit" />
                           <Select
-                            value={value.year}
-                            id={`data[${index}]year`}
-                            name={`data[${index}]year`}
+                            value={value.tahun_terbit}
+                            id={`data[${index}]tahun_terbit`}
+                            name={`data[${index}]tahun_terbit`}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             options={option}
-                            isError={getIn(errors?.data?.[index], "year")}
-                            messageError={getIn(errors?.data?.[index], "year")}
+                            isError={getIn(errors?.data?.[index], "tahun_terbit")}
+                            messageError={getIn(errors?.data?.[index], "tahun_terbit")}
                           />
                         </section>
                       </section>

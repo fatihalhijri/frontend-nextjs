@@ -14,7 +14,7 @@ import { isError } from "@tanstack/react-query";
 
 export const registerSchema = yup.object().shape({
   nama: yup.string().nullable().default("").required("wajib diisi"),
-  email: yup
+  username: yup
     .string()
     .nullable()
     .default("")
@@ -54,7 +54,7 @@ const Register = () => {
     setFieldValue,
   } = formik;
   const errorMessage = isError ? error.response?.data.messsage || [] : []
-  const emailError = errorMessage.find((msg:any) =>msg.includes('email'));
+  const emailError = errorMessage.find((msg:any) =>msg.includes('username'));
   const passwordError = errorMessage.find((msg:any) => msg.includes('password'))
 
 
@@ -80,25 +80,29 @@ const Register = () => {
               id="nama"
               name="nama"
               isError={getIn(errors, "nama")}
-              messageError={errors?.nama}
+              onBlur={handleBlur}
+              // messageError={errors?.nama}
+              messageError={getIn(errors, "nama")|| handleShowError}
             ></InputText>
           </section>
           <section>
-            <Label htmlFor="email" title="Email"></Label>
+            <Label htmlFor="username" title="UserName"></Label>
             <InputText
-              value={values.email}
-              placeholder="Ketikan  Email"
-              id="email"
-              name="email"
+              value={values.username}
+              placeholder="Ketikan  Username anda"
+              id="username"
+              name="username"
               onChange={(e) => {
                 // handleChange(e);
                 // handleTyping('email')
-                setFieldValue('email', e.target.value)
+                setFieldValue('username', e.target.value)
                 setIsEmailActive(false)
               }}
               onBlur={handleBlur}
               isError={isEmailActive ? emailError : null}
               messageError={isEmailActive ? emailError : null}
+              // isError={getIn(errors, "username") }
+              // messageError={getIn(errors, "username") || handleShowError}
 
             ></InputText>
           </section>
@@ -114,14 +118,19 @@ const Register = () => {
                 handleChange(e)
                 handleTyping('password')
               }}
-              isError={getIn(errors, "password") || handleShowError}
-              messageError={getIn(errors, "password") || handleShowError}
+              isError={isPasswordActive ? passwordError : null}
+              messageError={isPasswordActive ? passwordError : null}
+              // isError={getIn(errors, "password")}
+              // onBlur={handleBlur}
+              // messageError={getIn(errors, "password")|| handleShowError}
+              // isError={getIn(errors, "password") || handleShowError}
+              // messageError={getIn(errors, "password") || handleShowError}
               // onBlur={handleBlur}
               
               >
 
-              {formik.touched.email && formik.errors.email && (
-                <div>{formik.errors.email}</div>
+              {formik.touched.username && formik.errors.username && (
+                <div>{formik.errors.username}</div>
               )}
             </InputText>
           </section>

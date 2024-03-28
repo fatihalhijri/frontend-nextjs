@@ -11,7 +11,7 @@ import useAuthModule from "../lib";
 import Link from "next/link";
 
 export const LupaPasswordSchema = yup.object().shape({
-  email: yup
+  username: yup
     .string()
     .nullable()
     .default("")
@@ -41,16 +41,16 @@ const LupaPassword = ({params}:any) => {
     <FormikProvider value={formik}>
       <Form className="space-y-5" onSubmit={handleSubmit}>
         <section>
-          <Label htmlFor="email" title="Email" />
+          <Label htmlFor="email" title="Username" />
           <InputText
-            value={values.email}
+            value={values.username}
             placeholder="ketikan email anda"
-            id="email"
-            name="email"
+            id="username"
+            name="username"
             onChange={handleChange}
             onBlur={handleBlur}
-            isError={getIn(errors, "email")}
-            messageError={getIn(errors, "email")}
+            isError={getIn(errors, "username")}
+            messageError={getIn(errors, "username")}
           />
         </section>
         <section>

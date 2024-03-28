@@ -9,11 +9,20 @@ import { BookCreatePayload } from "../interface";
 import useBookModule from "../lib";
 import Link from "next/link";
 import { ArrowLongLeftIcon } from "@heroicons/react/20/solid";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export const createBookSchema = yup.object().shape({
-  title: yup.string().nullable().default("").required("Wajib isi"),
-  author: yup.string().nullable().default("").required("Wajib isi"),
-  year: yup.number().nullable().default(undefined).required("Wajib pilih"),
+  judul: yup.string().nullable().default("").required("Wajib isi"),
+  penulis: yup.string().nullable().default("").required("Wajib isi"),
+  tahun_terbit: yup
+    .number()
+    .nullable()
+    .default(undefined)
+    .required("Wajib pilih"),
+  harga: yup.number().default(0).required("Wajib di sisi"),
+  cover: yup.string().nullable().default("").required("Wajib di sisi"),
+  deskripsi: yup.string().nullable().default("").required("Wajib di sisi"),
 });
 export const option = [
   {
@@ -35,15 +44,19 @@ export const option = [
 ];
 
 const CreateBook = () => {
+  const router = useRouter();
   const { useCreateBook } = useBookModule();
   const { mutate, isLoading } = useCreateBook();
   const formik = useFormik<BookCreatePayload>({
-    // initialValues: {
-    //   title: "",
-    //   author: "",
-    //   year: undefined,
-    // },
-    initialValues: createBookSchema.getDefault(),
+    initialValues: {
+      judul: "",
+      penulis: "",
+      cover: "",
+      harga: 0,
+      deskripsi: "",
+      tahun_terbit: undefined,
+    },
+    // initialValues: createBookSchema.getDefault(),
     validationSchema: createBookSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
@@ -85,10 +98,10 @@ const CreateBook = () => {
         <FormikProvider value={formik}>
           <Form onSubmit={handleSubmit} className="space-y-5">
             <section>
-              <Label htmlFor="title" title="Title" />
+              <Label htmlFor="judul" title="Judul" />
               <InputText
                 onChange={(e) => {
-                  setFieldValue("title", e.target.value);
+                  setFieldValue("judul", e.target.value);
                   if (e.target.value === "ihsan") {
                     setFieldValue("year", 2023);
                   }
@@ -97,38 +110,93 @@ const CreateBook = () => {
                   }
                 }}
                 onBlur={handleBlur}
-                value={values.title}
+                value={values.judul}
                 placeholder="Judul Buku"
-                id="title"
-                name="title"
-                isError={!!errors.title}
-                messageError={errors.title}
+                id="judul"
+                name="judul"
+                isError={!!errors.judul}
+                messageError={errors.judul}
               />
             </section>
             <section>
-              <Label htmlFor="author" title="Auhtor" />
+              <Label htmlFor="penulis" title="penulis" />
               <InputText
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.author}
+                value={values.penulis}
                 placeholder="Penulis Buku"
-                id="author"
-                name="author"
-                isError={!!errors.author}
-                messageError={errors.author}
+                id="penulis"
+                name="penulis"
+                isError={!!errors.penulis}
+                messageError={errors.penulis}
               />
             </section>
             <section>
-              <Label htmlFor="year" title="Year" />
+              <Label htmlFor="harga" title="harga" />
+              <InputText
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.harga}
+                placeholder="harga Buku"
+                id="harga"
+                name="harga"
+                isError={!!errors.harga}
+                messageError={errors.harga}
+              />
+            </section>
+            <section className="">
+              <div>
+                <Image
+                  src={values.cover || "/img/profile2.jpg"}
+                  width={70}
+                  height={70}
+                  alt="foto orang"
+                />
+              </div>
+              <input
+                type="file"
+                id="file"
+                onChange={(event: any) => {
+                  const file = event.target.files[0];
+                  console.log("file", file);
+
+                  // if (file.type !== "image/jpeg") {
+                  //   return alert("type tidak sesauai");
+                  // }
+
+                  let reader = new FileReader();
+                  reader.onloadend = () => {
+                    setFieldValue(`cover`, reader.result);
+                  };
+                  reader.readAsDataURL(file);
+                  setFieldValue("file", file);
+                }}
+              />
+            </section>
+            <section>
+              <Label htmlFor="deskripsi" title="deskripsi" />
+              <InputText
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.deskripsi}
+                placeholder="deskripsi Buku"
+                id="deskripsi"
+                name="deskripsi"
+                isError={!!errors.deskripsi}
+                messageError={errors.deskripsi}
+              />
+            </section>
+            <section>
+              <Label htmlFor="tahun_terbit" title="tahun_terbit" />
               <Select
-                value={values.year}
+                value={values.tahun_terbit}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                id="year"
-                name="year"
+                id="tahun_terbit"
+                name="tahun_terbit"
                 options={option}
-                isError={!!errors.year}
-                messageError={errors.year}
+                isError={!!errors.tahun_terbit}
+                messageError={errors.tahun_terbit}
               />
             </section>
             <section>
@@ -137,6 +205,9 @@ const CreateBook = () => {
                 title="Simpan"
                 type="submit"
                 colorSchema="blue"
+                onClick={() => {
+                  router.push("/book");
+                }}
               />
               <Button
                 height="lg"
