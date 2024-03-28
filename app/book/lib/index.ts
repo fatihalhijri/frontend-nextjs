@@ -261,7 +261,8 @@ const useBookModule = () => {
     useUpdateBook,
     useDeleteBook,
     useDeleteBulkBook,
-    useCreateBulkBook
+    useCreateBulkBook,
+    useUpdateProfile
   };
 };
 
