@@ -9,6 +9,7 @@ interface Book {
   cover: string  ;
   deskripsi: string  ;
   search:string;
+  // is_deleted:boolean;
   created_at: string;
   updated_at: string;
 }
@@ -70,7 +71,9 @@ export interface UjianResponse extends UjianPayload {}
 export interface TestResponse extends TestPayload {}
 export interface AsliResponse extends AsliPayload {}
 
-export interface BookUpdatePayload extends BookCreatePayload {}
+export interface BookUpdatePayload extends BookCreatePayload {
+  file : undefined
+}
 
 export interface BookUploadResponse extends BookCreateResponse {}
 

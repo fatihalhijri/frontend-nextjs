@@ -25,7 +25,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const UpdateBook = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const { useDetailBook, useUpdateBook } = useBookModule();
   const { data, isFetching } = useDetailBook(params.id);
   const { mutate, isLoading } = useUpdateBook(+params.id);
@@ -37,7 +37,9 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
       tahun_terbit: data?.tahun_terbit || "",
       harga: data?.harga || 0,
       deskripsi: data?.deskripsi || "",
-      cover: data?.cover || "",
+      cover: "/img/cheri.jpg" || "",
+      file: undefined,
+      // cover: data?.cover || "",
       // id: data?.id,
     },
     validationSchema: createBookSchema,
@@ -46,7 +48,8 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
       console.log("sumbit berjalan", values);
       mutate(values, {
         onSuccess: () => {
-          router.push("/book");
+          // router.push("/book");
+          router.push("/ujian");
           console.log("sudah selesai");
         },
       });
@@ -73,10 +76,12 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
       );
     }
   }
+
+  console.log("values", values);
   return (
     <section className="flex items-center  justify-center w-full h-full">
       <section className="w-1/2">
-        <Link href={"/book"}>
+        <Link href={"/ujian"}>
           <span className="flex items-center">
             {" "}
             <ArrowLongLeftIcon className="h-5 w-5 mr-2" />
@@ -141,6 +146,7 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
                 type="file"
                 id="file"
                 onChange={(event: any) => {
+                  console.log("mhhgfhh");
                   const file = event.target.files[0];
                   console.log("file", file);
 
@@ -188,8 +194,9 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
                 height="md"
                 title="Perbarui"
                 colorSchema="blue"
-                isLoading={isLoading}
-                isDisabled={isLoading}
+                // isLoading={isLoading}
+                // isDisabled={isLoading}
+                type="submit"
               />
             </section>
           </Form>

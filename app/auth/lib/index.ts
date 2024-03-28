@@ -122,7 +122,8 @@ const useAuthModule = () => {
           // if (response.data.role === "admin") {
           //   return router.push("/admin");
           // }
-          router.push("/book");
+          // router.push("/book");
+          router.push("/ujian");
         },
         onError: (error: any) => {
           console.log("error", error);

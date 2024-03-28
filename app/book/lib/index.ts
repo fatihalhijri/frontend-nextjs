@@ -209,9 +209,11 @@ const useBookModule = () => {
   const updateProfile = async (
     payload: ProfileUpdatePayload
   ): Promise<ProfileResponse> => {
+    console.log('payload',payload)
     if (payload.file !== undefined) {
       const res = await uploadSingle(payload.file);
       console.log("res", res);
+      
 
       payload = {
         ...payload,

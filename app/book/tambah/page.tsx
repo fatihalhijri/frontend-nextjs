@@ -83,7 +83,7 @@ const CreateBook = () => {
   return (
     <section className="flex items-center py-32 justify-center w-full h-full">
       <section className=" w-1/2">
-        <Link href={"/book"}>
+        <Link href={"/ujian"}>
           <span className="flex items-center border-black/40 border-2 rounded-lg w-max py-2 px-4">
             {" "}
             <ArrowLongLeftIcon className="h-5 w-5 mr-2" />
@@ -206,7 +206,7 @@ const CreateBook = () => {
                 type="submit"
                 colorSchema="blue"
                 onClick={() => {
-                  router.push("/book");
+                  router.push("/ujian");
                 }}
               />
               <Button

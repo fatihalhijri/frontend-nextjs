@@ -18,12 +18,16 @@ const nextConfig = {
                 source: '/lupapass',
                 destination: '/auth/lupapass'
             },
+            {
+                source: '/ujian',
+                destination: '/book/ujian'
+            },
             
         ]
     },
     images: {
-        domains: ['http://localhost:4021'], // Tambahkan domain dari mana Anda mengambil gambar
-        
+        domains: ['localhost:4021'], // Tambahkan domain dari mana Anda mengambil gambar
+        path:'/uploads/',
       },
     
 }
