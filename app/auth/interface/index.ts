@@ -59,3 +59,7 @@ export interface ProfileUpdatePayload
   extends Pick<User, "cover" | "nama" | "id"> {
   file?: File;
 }
+export interface BookPUpdatePayload
+  extends Pick<User, "cover" | "nama" | "id" |"username"> {
+  file?: File;
+}

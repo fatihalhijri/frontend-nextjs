@@ -58,7 +58,6 @@ const useBookModule = () => {
       () => getBookList(filterParams),
       {
         keepPreviousData: true,
-
         select: (response) => response,
       }
     );
@@ -205,6 +204,25 @@ const useBookModule = () => {
       }
     );
     return { mutate, isLoading };
+  };
+  const updateProfileBook = async (
+    payload: ProfileUpdatePayload
+  ): Promise<ProfileResponse> => {
+    console.log('payload',payload)
+    if (payload.file !== undefined) {
+      const res = await uploadSingle(payload.file);
+      console.log("res", res);
+      
+
+      payload = {
+        ...payload,
+        cover: res.data.file_url,
+      };
+    }
+
+    return axiosAuthClient
+      .put("/book/update", payload)
+      .then((res) => res.data);
   };
   const updateProfile = async (
     payload: ProfileUpdatePayload
