@@ -20,12 +20,14 @@ import { useToast } from "@/hook/useToast";
 import { ProfileResponse, ProfileUpdatePayload } from "@/app/auth/interface";
 import useAxiosAuth from "@/hook/useAxiousAuth";
 import useUploadFile from "@/hook/useUploadFile";
+import { useSession } from "next-auth/react";
 
 const useBookModule = () => {
   const queryClient = useQueryClient();
   const {toastError,toastSuccess,toastWarning} = useToast();
   const axiosAuthClient = useAxiosAuth();
   const {uploadSingle} = useUploadFile();
+  const { data: session } = useSession();
   const defaultParams:BookListFilter = {
     page: 1,
     pageSize: 10,
@@ -110,16 +112,33 @@ const useBookModule = () => {
 
   const useUpdateBook = (id: number) => {
     const { isLoading, mutate } = useMutation(
-      (payload: BookUpdatePayload) => {
+      async (payload: BookUpdatePayload) => 
+        {
+          if (payload.file !== undefined) {
+            const res = await uploadSingle(payload.file);
+            console.log('res', res);
+            payload = {
+              ...payload,
+              cover: res.data.file_url,
+            };
+          }
         return axiosClient.put(`/book/update/${id}`, payload);
       },
       {
         onSuccess: (response) => {
           toastSuccess(response.data.message);
-          queryClient.invalidateQueries(["/book/detail"]);
+          // queryClient.invalidateQueries(["/book/detail"]); 
+          queryClient.invalidateQueries(["/auth/profile"]);
         },
 
-        onError: (error) => {
+        onError: (error:any) => {
+          if (error.response.status == 422) {
+            return toastWarning(error.response.data.message);
+          }
+
+          if (error.response.status == 400) {
+            return toastWarning(error.response.data.message.toString());
+          }
           toastError();
         },
       }
@@ -205,6 +224,25 @@ const useBookModule = () => {
     );
     return { mutate, isLoading };
   };
+  const getProfile = async (): Promise<ProfileResponse> => {
+    return axiosAuthClient.get("/auth/profile").then((res) => res.data);
+  };
+  const useProfile = () => {
+    const { data, isLoading, isFetching } = useQuery(
+      ["/auth/profile"],
+      () => getProfile(),
+      {
+        select: (response) => response,
+        staleTime: 1000 * 60 * 60,
+        refetchInterval: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        // enabled: session?.user?.id !== undefined,
+        enabled: !!session === true,
+      }
+    );
+
+    return { data, isFetching, isLoading };
+  };
   const updateProfileBook = async (
     payload: ProfileUpdatePayload
   ): Promise<ProfileResponse> => {
@@ -280,7 +318,8 @@ const useBookModule = () => {
     useDeleteBook,
     useDeleteBulkBook,
     useCreateBulkBook,
-    useUpdateProfile
+    useUpdateProfile,
+    useProfile
   };
 };
 

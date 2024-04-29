@@ -45,13 +45,17 @@ export const option = [
 
 const CreateBook = () => {
   const router = useRouter();
-  const { useCreateBook } = useBookModule();
+  const { useCreateBook,useUpdateProfile,useProfile } = useBookModule();
   const { mutate, isLoading } = useCreateBook();
-  const formik = useFormik<BookCreatePayload>({
+  const { data, isFetching } = useProfile();
+  // const{mutate,isLoading} = useUpdateProfile();
+  // const formik = useFormik<BookCreatePayload>({
+  const formik = useFormik<any>({
     initialValues: {
+      
       judul: "",
       penulis: "",
-      cover: "",
+      cover: data?.data?.cover,
       harga: 0,
       deskripsi: "",
       tahun_terbit: undefined,
@@ -115,7 +119,7 @@ const CreateBook = () => {
                 id="judul"
                 name="judul"
                 isError={!!errors.judul}
-                messageError={errors.judul}
+                // messageError={errors.judul}
               />
             </section>
             <section>
@@ -128,7 +132,7 @@ const CreateBook = () => {
                 id="penulis"
                 name="penulis"
                 isError={!!errors.penulis}
-                messageError={errors.penulis}
+                // messageError={errors.penulis}
               />
             </section>
             <section>
@@ -141,15 +145,15 @@ const CreateBook = () => {
                 id="harga"
                 name="harga"
                 isError={!!errors.harga}
-                messageError={errors.harga}
+                // messageError={errors.harga}
               />
             </section>
             <section className="">
               <div>
-                <Image
+                <img
                   src={values.cover || "/img/profile2.jpg"}
-                  width={70}
-                  height={70}
+                  width={100}
+                  height={100}
                   alt="foto orang"
                 />
               </div>
@@ -183,7 +187,7 @@ const CreateBook = () => {
                 id="deskripsi"
                 name="deskripsi"
                 isError={!!errors.deskripsi}
-                messageError={errors.deskripsi}
+                // messageError={errors.deskripsi}
               />
             </section>
             <section>
@@ -196,7 +200,7 @@ const CreateBook = () => {
                 name="tahun_terbit"
                 options={option}
                 isError={!!errors.tahun_terbit}
-                messageError={errors.tahun_terbit}
+                // messageError={errors.tahun_terbit}
               />
             </section>
             <section>

@@ -26,11 +26,18 @@ import { useQueryClient } from "@tanstack/react-query";
 const UpdateBook = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { useDetailBook, useUpdateBook } = useBookModule();
+ 
+  const { useDetailBook, useUpdateBook,useUpdateProfile,useProfile } = useBookModule();
+  
+ 
+  // const { data, isFetching } = useProfile();
+  // const{mutate,isLoading} = useUpdateProfile();
   const { data, isFetching } = useDetailBook(params.id);
   const { mutate, isLoading } = useUpdateBook(+params.id);
+  
 
-  const formik = useFormik<BookUpdatePayload>({
+  // const formik = useFormik<BookUpdatePayload>({
+  const formik = useFormik<any>({
     initialValues: {
       judul: data?.judul || "",
       penulis: data?.penulis || "",
@@ -40,7 +47,7 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
       // cover: "/img/cheri.jpg" || "",
       file: undefined,
       cover: data?.cover || "",
-      // id: data?.id,
+      id: data?.id,
     },
     validationSchema: createBookSchema,
     enableReinitialize: true,
@@ -104,7 +111,7 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 isError={!!errors.judul}
-                messageError={errors.judul}
+                // messageError={errors.judul}
               />
             </section>
             <section>
@@ -117,7 +124,7 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 isError={!!errors.penulis}
-                messageError={errors.penulis}
+                // messageError={errors.penulis}
               />
             </section>
             <section>
@@ -130,15 +137,15 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 isError={!!errors.harga}
-                messageError={errors.harga}
+                // messageError={errors.harga}
               />
             </section>
             <section className="">
               <div>
-                <Image
+                <img
                   src={values.cover || "/img/profile2.jpg"}
-                  width={70}
-                  height={70}
+                  width={100}
+                  height={100}
                   alt="foto orang"
                 />
               </div>
@@ -173,7 +180,7 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 isError={!!errors.deskripsi}
-                messageError={errors.deskripsi}
+                // messageError={errors.deskripsi}
               />
             </section>
             <section>
@@ -186,7 +193,7 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
                 onBlur={handleBlur}
                 options={option}
                 isError={!!errors.tahun_terbit}
-                messageError={errors.tahun_terbit}
+                // messageError={errors.tahun_terbit}
               />
             </section>
             <section>

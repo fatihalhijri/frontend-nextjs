@@ -1,7 +1,7 @@
 import { BaseResponsePagination } from "@/lib/axiousClient";
 
 interface Book {
-  id: number;
+  id: number |any;
   judul: string;
   penulis: string;
   tahun_terbit: number | undefined | string;
@@ -71,9 +71,19 @@ export interface UjianResponse extends UjianPayload {}
 export interface TestResponse extends TestPayload {}
 export interface AsliResponse extends AsliPayload {}
 
-export interface BookUpdatePayload extends BookCreatePayload {
-  file : undefined
-}
+// export interface BookUpdatePayload extends BookCreatePayload {
+//   file : undefined
+// }
+
+export interface BookUpdatePayload
+  extends Pick<Book, "penulis" | "judul" | "tahun_terbit" |'harga' |'cover'|'deskripsi'|'id'> {
+    file? :File;
+  }
+
+// export interface ProfileUpdatePayload
+//   extends Pick<User, "cover" | "nama" | "id"> {
+//   file?: File;
+// }
 
 export interface BookUploadResponse extends BookCreateResponse {}
 

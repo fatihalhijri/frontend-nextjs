@@ -16,7 +16,7 @@ export const registerSchema = yup.object().shape({
     .string()
     .nullable()
     .default("")
-
+  
     .required("Wajib isi"),
   avatar: yup.string().nullable().default("").required("Wajib isi"),
 });
