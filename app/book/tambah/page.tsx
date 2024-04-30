@@ -5,7 +5,7 @@ import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { useFormik, Form, FormikProvider } from "formik";
 import * as yup from "yup";
-import { BookCreatePayload } from "../interface";
+import { BookCreateDto, BookCreatePayload } from "../interface";
 import useBookModule from "../lib";
 import Link from "next/link";
 import { ArrowLongLeftIcon } from "@heroicons/react/20/solid";
@@ -47,30 +47,45 @@ const CreateBook = () => {
   const router = useRouter();
   const { useCreateBook,useUpdateProfile,useProfile } = useBookModule();
   const { mutate, isLoading } = useCreateBook();
-  const { data, isFetching } = useProfile();
+  // const { data, isFetching } = useProfile();
   // const{mutate,isLoading} = useUpdateProfile();
   // const formik = useFormik<BookCreatePayload>({
-  const formik = useFormik<any>({
-    initialValues: {
+  // const formik = useFormik<any>({
+  //   initialValues: {
       
-      judul: "",
-      penulis: "",
-      cover: data?.data?.cover,
-      harga: 0,
-      deskripsi: "",
-      tahun_terbit: undefined,
-    },
-    // initialValues: createBookSchema.getDefault(),
+  //     judul: "",
+  //     penulis: "",
+  //     cover: data?.data?.cover,
+  //     harga: 0,
+  //     deskripsi: "",
+  //     tahun_terbit: undefined,
+  //   },
+  //   // initialValues: createBookSchema.getDefault(),
+  //   validationSchema: createBookSchema,
+  //   enableReinitialize: true,
+  //   onSubmit: (values) => {
+  //     mutate(values, {
+  //       onSuccess: () => {
+  //         resetForm();
+  //         setValues(createBookSchema.getDefault());
+  //       },
+  //     });
+  //     console.log("submit berjalan", values);
+  //   },
+  // });
+
+  const formik = useFormik<BookCreateDto>({
+    initialValues: createBookSchema.getDefault(),
     validationSchema: createBookSchema,
     enableReinitialize: true,
     onSubmit: (values) => {
+      console.log("values", values);
       mutate(values, {
         onSuccess: () => {
           resetForm();
-          setValues(createBookSchema.getDefault());
+          // setValues(createBookSchema.getDefault());
         },
       });
-      console.log("submit berjalan", values);
     },
   });
   const {
@@ -176,6 +191,7 @@ const CreateBook = () => {
                   setFieldValue("file", file);
                 }}
               />
+              {errors.cover && <p className="text-red-500">{errors.cover}</p>}
             </section>
             <section>
               <Label htmlFor="deskripsi" title="deskripsi" />

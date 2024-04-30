@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BookCreateArrayPayload,
+  BookCreateDto,
   BookCreatePayload,
   BookCreateResponse,
   BookDeleteArrayPayload,
@@ -8,8 +9,10 @@ import {
   BookListFilter,
   BookListResponse,
   BookUpdatePayload,
+  BookUploadResponse,
   FormArrayPayload,
   UjianCreateArrayPayload,
+  UpdateBook,
 } from "../interface";
 import { axiosClient } from "@/lib/axiousClient";
 import { ChangeEvent, useState } from "react";
@@ -21,6 +24,8 @@ import { ProfileResponse, ProfileUpdatePayload } from "@/app/auth/interface";
 import useAxiosAuth from "@/hook/useAxiousAuth";
 import useUploadFile from "@/hook/useUploadFile";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+// import router from "next/router";
 
 const useBookModule = () => {
   const queryClient = useQueryClient();
@@ -28,6 +33,7 @@ const useBookModule = () => {
   const axiosAuthClient = useAxiosAuth();
   const {uploadSingle} = useUploadFile();
   const { data: session } = useSession();
+  const router = useRouter();
   const defaultParams:BookListFilter = {
     page: 1,
     pageSize: 10,
@@ -83,17 +89,50 @@ const useBookModule = () => {
   // ): Promise<BookCreateResponse> => {
   //   return axiosClient.post(`/book/create`, payload).then((res) => res.data);
   // };
+  const createBook = async (
+    payload: BookCreateDto
+  ): Promise<BookCreateResponse> => {
+    if (payload.file !== undefined) {
+      const res = await uploadSingle(payload.file);
+      console.log("res", res);
 
+      payload = {
+        ...payload,
+        cover: res.data.file_url,
+      };
+    }
+    return axiosAuthClient
+      .post(`/book/create`, payload)
+      .then((res) => res.data);
+  };
+  
+
+  // const useCreateBook = () => {
+  //   const { mutate, isLoading } = useMutation(
+  //     (payload: BookCreatePayload) => {
+  //       return axiosClient.post("/book/create", payload);
+  //     },
+  //     {
+  //       onSuccess: (response) => {
+  //         toastSuccess(response.data.message);
+  //       },
+  //       onError: (error) => {
+  //         toastError();
+  //       },
+  //     }
+  //   );
+  //   return { mutate, isLoading };
+  // };
   const useCreateBook = () => {
-    const { mutate, isLoading } = useMutation(
-      (payload: BookCreatePayload) => {
-        return axiosClient.post("/book/create", payload);
-      },
+    const { isLoading, mutate } = useMutation(
+      (payload: BookCreateDto) => createBook(payload),
       {
         onSuccess: (response) => {
-          toastSuccess(response.data.message);
+          toastSuccess(response.message);
+          router.push("/ujian");
         },
-        onError: (error) => {
+        onError: (gagal) => {
+          console.log("error", gagal);
           toastError();
         },
       }
@@ -110,28 +149,69 @@ const useBookModule = () => {
   //     .then((res) => res.data);
   // };
 
+  // const useUpdateBook = (id: number) => {
+  //   const { isLoading, mutate } = useMutation(
+  //     async (payload: BookUpdatePayload) => 
+  //       {
+  //         if (payload.file !== undefined) {
+  //           const res = await uploadSingle(payload.file);
+  //           console.log('res', res);
+  //           payload = {
+  //             ...payload,
+  //             cover: res.data.file_url,
+  //           };
+  //         }
+  //       return axiosClient.put(`/book/update/${id}`, payload);
+  //     },
+  //     {
+  //       onSuccess: (response) => {
+  //         toastSuccess(response.data.message);
+  //         // queryClient.invalidateQueries(["/book/detail"]); 
+  //         queryClient.invalidateQueries(["/auth/profile"]);
+  //       },
+
+  //       onError: (error:any) => {
+  //         if (error.response.status == 422) {
+  //           return toastWarning(error.response.data.message);
+  //         }
+
+  //         if (error.response.status == 400) {
+  //           return toastWarning(error.response.data.message.toString());
+  //         }
+  //         toastError();
+  //       },
+  //     }
+  //   );
+  //   return { mutate, isLoading };
+  // };
+
+  const updateBook = async (
+    payload: UpdateBook,
+    id: number
+  ): Promise<BookCreateResponse> => {
+    if (payload.file !== undefined) {
+      const res = await uploadSingle(payload.file);
+      console.log("res", res);
+
+      payload = {
+        ...payload,
+        cover: res.data.file_url,
+      };
+    }
+    return axiosAuthClient
+      .put(`/book/${id}/update`, payload)
+      .then((res) => res.data);
+  };
+
   const useUpdateBook = (id: number) => {
-    const { isLoading, mutate } = useMutation(
-      async (payload: BookUpdatePayload) => 
-        {
-          if (payload.file !== undefined) {
-            const res = await uploadSingle(payload.file);
-            console.log('res', res);
-            payload = {
-              ...payload,
-              cover: res.data.file_url,
-            };
-          }
-        return axiosClient.put(`/book/update/${id}`, payload);
-      },
+    const { isLoading, mutate, data } = useMutation(
+      (payload: UpdateBook) => updateBook(payload, id),
       {
         onSuccess: (response) => {
-          toastSuccess(response.data.message);
-          // queryClient.invalidateQueries(["/book/detail"]); 
-          queryClient.invalidateQueries(["/auth/profile"]);
+          toastSuccess(response.message);
+          router.push("/ujian");
         },
-
-        onError: (error:any) => {
+        onError: (error: any) => {
           if (error.response.status == 422) {
             return toastWarning(error.response.data.message);
           }
@@ -139,14 +219,13 @@ const useBookModule = () => {
           if (error.response.status == 400) {
             return toastWarning(error.response.data.message.toString());
           }
+
           toastError();
         },
       }
     );
-    return { mutate, isLoading };
+    return { mutate, isLoading, data };
   };
-
-  
   
   
   const useDetailBook = (id: string) => {
@@ -189,6 +268,7 @@ const useBookModule = () => {
     return { mutate, isLoading };
   };
 
+  
   const useCreateBulkBook = () => {
     const { mutate, isLoading } = useMutation(
       (payload: BookCreateArrayPayload) => {

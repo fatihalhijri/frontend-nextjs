@@ -27,7 +27,7 @@ const UpdateBook = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
  
-  const { useDetailBook, useUpdateBook,useUpdateProfile,useProfile } = useBookModule();
+  const { useDetailBook, useUpdateBook } = useBookModule();
   
  
   // const { data, isFetching } = useProfile();
