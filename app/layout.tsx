@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="px-5 py-10">
+      <body className="">
         <NextAuthProvider session={session}>
           <ReactQuery>
             <LoadingPage>{children}</LoadingPage>
