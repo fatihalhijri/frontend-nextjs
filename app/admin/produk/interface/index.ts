@@ -4,12 +4,23 @@ interface Produk {
   id?: number;
   nama_produk: string;
   deskripsi_produk:string;
-  harga: number | undefined | string;
-  stok:string;
-  created_at: string;
-  updated_at: string;
-  kategori_id:number;
-  barcode:number; 
+  // harga: number | undefined | string;
+  harga: number |null;
+  barcode:string; 
+  stok:number |null;
+  // created_at: string;
+  // updated_at: string;
+  created_by:{
+    id:number;
+    nama:string;
+  };
+  updated_by:{
+    id:number;
+    nama:string;
+  };
+  kategori_id:{
+    id:number
+  };
 }
 
 export interface ProdukListResponse extends BaseResponsePagination{
@@ -27,7 +38,7 @@ export interface ProdukCreatePayload
     Produk,
     "harga" | "barcode" | "nama_produk" | "deskripsi_produk" | "stok"
   > {
-  kategori_id: number;
+  // kategori_id: number;
 }
 
 export interface ProdukCreateArrayPayload {

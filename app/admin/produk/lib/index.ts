@@ -1,10 +1,11 @@
 "use client";
 import { usePagination, useToast } from "@/hook";
-import { ProdukListFilter, ProdukListResponse } from "../interface";
+import { ProdukCreateArrayPayload, ProdukListFilter, ProdukListResponse } from "../interface";
 import { axiosClient } from "@/lib/axiousClient";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hook/useAxiousAuth";
+import Swal from "sweetalert2";
 
 const useProdukModule = () => {
   const { data: produk } = useSession();
@@ -22,13 +23,12 @@ const useProdukModule = () => {
   const getProdukList = async (
     params: ProdukListFilter
   ): Promise<ProdukListResponse> => {
-    return axiosAuthClient.get("/produk/list", { params }).then((res) => res.data);
+    return axiosAuthClient
+      .get("/produk/list", { params })
+      .then((res) => res.data);
   };
   const useProdukList = () => {
-    const {
-      
-      filterParams,
-    } = usePagination(defaultParams);
+    const { filterParams } = usePagination(defaultParams);
 
     const { data, isFetching, isLoading, isError } = useQuery(
       ["/produk/list", [filterParams]],
@@ -44,9 +44,38 @@ const useProdukModule = () => {
       data,
       isFetching,
       isLoading,
-      
     };
   };
+
+  const useCreateProdukBulk = () => {
+    const { mutate, isLoading } = useMutation(
+      (payload: ProdukCreateArrayPayload) => {
+        return axiosAuthClient.post("/produk/create-bulk", payload);
+      },
+      {
+        onSuccess: (response) => {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: response.data.message,
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        },
+        onError: (error) => {
+          Swal.fire({
+            position: "top",
+            icon: "error",
+            title: "Ada Kesalahan",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        },
+      }
+    );
+    return { mutate, isLoading };
+  };
+
   return {
     useProdukList,
   };
