@@ -36,9 +36,9 @@ export interface ProdukListFilter extends Partial<Produk> {
 export interface ProdukCreatePayload
   extends Pick<
     Produk,
-    "harga" | "barcode" | "nama_produk" | "deskripsi_produk" | "stok"
+    "harga" | "barcode" | "nama_produk" | "deskripsi_produk" | "stok" 
   > {
-  // kategori_id: number;
+  kategori_id: number;
 }
 
 export interface ProdukCreateArrayPayload {

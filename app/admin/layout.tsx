@@ -40,13 +40,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <button
               key={index}
               onClick={() => router.push(`/admin/${item.route}`)}
+              // className={clsx(
+              //   "w-full  rounded-md text-base duration-100 hover:scale-110 ",
+              //   {
+              //     "bg-blue-200 hover:bg-blue-300":
+              //       pathname?.includes(item.route) === false,
+              //     "bg-blue-500 hover:bg-blue-500 text-white":
+              //       pathname?.includes(item.route) === true ,
+              //   }
+              // )}
               className={clsx(
-                "w-full  rounded-md text-base duration-100 hover:scale-110 ",
+                "w-full rounded-md text-base duration-100 hover:scale-110",
                 {
-                  "bg-blue-200 hover:bg-blue-300":
-                    pathname?.includes(item.route) === false,
-                  "bg-blue-500 hover:bg-blue-500 text-white":
-                    pathname?.includes(item.route) === true ,
+                  "bg-blue-200 hover:bg-blue-300": pathname?.includes(item.route) === false,
+                  "bg-blue-200 hover:bg-blue-500 text-white": pathname?.includes(item.route) === true,
+                  "bg-blue-500 text-white": pathname?.includes(item.route), // tambahkan kelas ini untuk tombol yang di-klik
                 }
               )}
             >
