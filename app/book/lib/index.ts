@@ -96,6 +96,7 @@ const useBookModule = () => {
       const res = await uploadSingle(payload.file);
       console.log("res", res);
 
+
       payload = {
         ...payload,
         cover: res.data.file_url,
@@ -199,7 +200,7 @@ const useBookModule = () => {
       };
     }
     return axiosAuthClient
-      .put(`/book/${id}/update`, payload)
+      .put(`/book/update/${id}`, payload)
       .then((res) => res.data);
   };
 
@@ -212,14 +213,7 @@ const useBookModule = () => {
           router.push("/ujian");
         },
         onError: (error: any) => {
-          if (error.response.status == 422) {
-            return toastWarning(error.response.data.message);
-          }
-
-          if (error.response.status == 400) {
-            return toastWarning(error.response.data.message.toString());
-          }
-
+          console.log('gagal',error)
           toastError();
         },
       }

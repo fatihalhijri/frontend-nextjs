@@ -26,8 +26,7 @@ const nextConfig = {
         ]
     },
     images: {
-        domains: ['localhost:4021/'], // Tambahkan domain dari mana Anda mengambil gambar
-        path:'/uploads/',
+        domains: ['localhost'], 
       },
     
 }
