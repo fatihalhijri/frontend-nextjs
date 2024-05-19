@@ -78,6 +78,7 @@ const useProdukModule = () => {
 
   return {
     useProdukList,
+    useCreateProdukBulk
   };
 };
 

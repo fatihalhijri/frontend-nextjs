@@ -5,7 +5,7 @@ interface Produk {
   nama_produk: string;
   deskripsi_produk:string;
   // harga: number | undefined | string;
-  harga: number |null;
+  harga: number |null |any;
   barcode:string; 
   stok:number |null;
   // created_at: string;
@@ -20,6 +20,7 @@ interface Produk {
   };
   kategori_id:{
     id:number
+    kategori:string;
   };
 }
 

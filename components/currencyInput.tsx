@@ -1,5 +1,7 @@
 import clsx from "clsx";
-import CurrencyInput from "react-currency-input-field";
+import { HtmlProps } from "next/dist/shared/lib/html-context";
+import { ReactComponentElement } from "react";
+import CurrencyInput, { CurrencyInputProps } from "react-currency-input-field";
 
 interface InputProps {
   isError?: boolean;
@@ -9,9 +11,7 @@ interface InputProps {
   value: string | number | undefined;
 }
 
-const CurrencyInputText: React.FC<
-  InputProps 
-> = ({
+const CurrencyInputText: React.FC<InputProps > = ({
   messageError = "wajib  donk",
   isError = false,
   id,
@@ -32,10 +32,10 @@ const CurrencyInputText: React.FC<
         {...props}
       /> */}
       <CurrencyInput
-        // value={value}
-        id={`${id}`}
+        value={value}
+        // id={`${id}`}
+        id={String(id)}
         name={name}
-        
         placeholder="Rp. 0"
         decimalsLimit={2}
         prefix="Rp. "
@@ -46,8 +46,8 @@ const CurrencyInputText: React.FC<
           "border-gray-700": !isError,
         })}
         {...props}
-        />
-      
+      />
+
       {isError ? (
         <p className="text-red-500 font-bold">{messageError}</p>
       ) : (

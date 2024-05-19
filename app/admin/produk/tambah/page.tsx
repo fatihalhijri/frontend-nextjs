@@ -18,6 +18,8 @@ import clsx from "clsx";
 import Select from "@/components/Select";
 import useOptions from "@/hook/useOption";
 import CurrencyInputText from "@/components/currencyInput";
+import { useState } from "react";
+import useProdukModule from "../lib";
 
 export const createBookSchema = yup.object().shape({
   barcode: yup.string().nullable().default("").required("Wajib isi"),
@@ -62,26 +64,46 @@ const defaultProdukArray = {
       deskripsi_produk: "",
       harga: null,
       stok: null,
-      kategori_id: undefined ||null||0
+      kategori_id: undefined || null || 0,
     },
   ],
 };
+
 const createBookArraySchema = yup
   .object()
   .shape({ data: yup.array().of(createBookSchema) })
   .default(defaultProdukArray);
 
 const TambahProduk = () => {
+  // const [value, setValue] = useState<string | number | undefined>(undefined);
+  // const [isError, setIsError] = useState(false);
+
+  // const handleValueChange = (value: string | undefined, name: string) => {
+  //   setValue(value);
+  //   if (!value || Number(value) <= 0) {
+  //     setIsError(true);
+  //   } else {
+  //     setIsError(false);
+  //   }
+  // };
+  const{useCreateProdukBulk} = useProdukModule();
+  const {mutate,isLoading} = useCreateProdukBulk();
   const formik = useFormik<ProdukCreateArrayPayload>({
     initialValues: defaultProdukArray,
     validationSchema: createBookArraySchema,
     enableReinitialize: true,
     onSubmit: (values) => {
+      mutate(values, {
+        onSuccess: () => {
+          resetForm();
+          setValues(createBookArraySchema.getDefault());
+        },
+      }); 
       console.log("values", values);
     },
   });
-  const {optionKategori} = useOptions()
-  console.log(' option Kategori',optionKategori)
+  const { optionKategori } = useOptions();
+  console.log(" option Kategori", optionKategori);
 
   const {
     handleChange,
@@ -104,6 +126,7 @@ const TambahProduk = () => {
             name={"data"}
             render={(arrayHelpers: ArrayHelpers) => (
               <>
+                    
                 {values &&
                   values?.data?.map((value, index) => (
                     <section
@@ -183,8 +206,8 @@ const TambahProduk = () => {
                       </section>
                       <section>
                         <Label htmlFor={`data[${index}]harga`} title="harga" />
-                        
-                        {/* <CurrencyInput
+
+                        <CurrencyInput
                         
                           id={`data[${index}]harga`}
                           name={`data[${index}]harga`}
@@ -197,6 +220,7 @@ const TambahProduk = () => {
                           onValueChange={(value)=> {
                             setFieldValue(`data[${index}]harga`, value)
                           }}
+                          // onChange={handleChange}
                           style={{
                             height: 40,
                             margin: 0,
@@ -224,31 +248,29 @@ const TambahProduk = () => {
                                 ) === false
                             }
                           )}
-                        /> */}
-                        <CurrencyInputText
-                        id={`data[${index}]harga`}
-                        name={`data[${index}]harga`}
-                        value={value.harga || 0}
-                        
-                        isError={
-                          getIn(errors?.data?.[index], "harga") &&
-                          getIn(touched?.data?.[index], "harga")
-                        }
-                        messageError={getIn(
-                          errors?.data?.[index],
-                          "harga"
-                        )}
-                        >
+                        />
 
-                        </CurrencyInputText>
+                        {/* <CurrencyInputText
+                          id={`data[${index}]harga`}
+                          name={`data[${index}]harga`}
+                          value={value.harga || ''}
+                          
+                          // onChange={handleChange}
+                          
+                          onValueChange={handleChange}
+                          onBlur={handleBlur}
+                          isError={
+                            getIn(errors?.data?.[index], "harga") &&
+                            getIn(touched?.data?.[index], "harga")
+                          }
+                          messageError={getIn(errors?.data?.[index], "harga")}
+                        ></CurrencyInputText> */}
+                        
                       </section>
                       <section>
-                        <Label
-                          htmlFor={`data[${index}]stok`}
-                          title="stok"
-                        />
+                        <Label htmlFor={`data[${index}]stok`} title="stok" />
                         <InputText
-                          value={value.stok||''}
+                          value={value.stok || ""}
                           placeholder="berikan stok anda"
                           id={`data[${index}]stok`}
                           name={`data[${index}]stok`}
@@ -258,28 +280,28 @@ const TambahProduk = () => {
                             getIn(errors?.data?.[index], "stok") &&
                             getIn(touched?.data?.[index], "stok")
                           }
-                          messageError={getIn(
-                            errors?.data?.[index],
-                            "stok"
-                          )}
+                          messageError={getIn(errors?.data?.[index], "stok")}
                         />
                       </section>
                       <section>
-                          <Label htmlFor="kategori_id" title="Kategori" />
-                          <Select
-                            value={value.kategori_id || 0}
-                            id={`data[${index}]kategori_id`}
-                            name={`data[${index}]kategori_id`}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            options={optionKategori}
-                            isError={getIn(errors?.data?.[index], "kategori_id") &&
-                            getIn(
-                              touched?.data?.[index],
-                              "kategori_id")}
-                            messageError={getIn(errors?.data?.[index], "kategori_id")}
-                          />
-                        </section>
+                        <Label htmlFor="kategori_id" title="Kategori" />
+                        <Select
+                          value={value.kategori_id || 0}
+                          id={`data[${index}]kategori_id`}
+                          name={`data[${index}]kategori_id`}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          options={optionKategori}
+                          isError={
+                            getIn(errors?.data?.[index], "kategori_id") &&
+                            getIn(touched?.data?.[index], "kategori_id")
+                          }
+                          messageError={getIn(
+                            errors?.data?.[index],
+                            "kategori_id"
+                          )}
+                        />
+                      </section>
                     </section>
                   ))}
 
