@@ -1,9 +1,10 @@
 import React from 'react'
+import useBookModule from '../book/lib';
 
-const page = () => {
+const Pembeli = () => {
   return (
-    <div>Uas Page</div>
+    <div>Uas Pembeli</div>
   )
 }
 
-export default page
+export default Pembeli
