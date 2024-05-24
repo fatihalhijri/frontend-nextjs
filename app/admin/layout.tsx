@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   "bg-blue-200 hover:bg-blue-500 text-white": pathname?.includes(item.route) === true,
                   "bg-blue-500 text-white": pathname?.includes(item.route), // tambahkan kelas ini untuk tombol yang di-klik
                 }
-              )}
+              )}  
             >
               {/* <Link href={`admin/${item.route}`}>{item.label}</Link> */}
               {item.label}
