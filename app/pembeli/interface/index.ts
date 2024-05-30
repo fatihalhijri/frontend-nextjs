@@ -1,10 +1,17 @@
 import { BaseResponsePagination } from "@/lib/axiousClient";
 
 interface Produk {
-  id: number;
-  title: string;
-  author: string;
-  year: number | undefined | string;
+  id?: number;
+  nama_produk: string;
+  deskripsi_produk: string;
+  kategori_id:{
+    id:number
+    kategori:string;
+  };
+  harga:number;
+  barcode:string;
+  stok:number;
+  cover:string;
   created_at: string;
   updated_at: string;
 }
@@ -16,20 +23,22 @@ export interface ProdukListResponse extends BaseResponsePagination {
 }
 
 export interface ProdukListFilter extends Partial<Produk> {
-  from_year?: string;
-  to_year?: string;
+  barcode?: string;
+  kategori_id?: string |any;
   page: number;
   pageSize: number;
 }
 export interface ProdukCreatePayload
-  extends Pick<Produk, "author" | "title" | "year"> {}
+  extends Pick<Produk, "deskripsi_produk" | "nama_produk" | "kategori_id"|'harga'|'barcode'|'stok'> {}
 
 export interface ProdukCreateResponse {
   status: string;
   message: string;
   data?: Produk;
 }
-
+export interface ProdukCreateDto extends Omit<Produk, " id"> {
+  file?: File;
+}
 
 export interface ProdukUpdatePayload extends ProdukCreatePayload {}
 

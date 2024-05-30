@@ -11,11 +11,21 @@ const useProdukModule = () => {
   const defaultParams:ProdukListFilter = {
     page: 1,
     pageSize: 10,
-    title: "",
-    author: "",
-    from_year: "",
-    to_year: "",
+    nama_produk: "",
+    barcode: "",
+    deskripsi_produk: "",
+    harga: 0,
+    kategori_id: undefined,
+    stok: 0,
   };
+  // const defaultParams:ProdukListFilter = {
+  //   page: 1,
+  //   pageSize: 10,
+  //   title: "",
+  //   author: "",
+  //   from_year: "",
+  //   to_year: "",
+  // };
 
   const getProdukList = async (
     params: ProdukListFilter
