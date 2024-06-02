@@ -4,6 +4,18 @@ const nextConfig = {
     experimental: {
         appDir: true,
     },
+    theme: {
+        extend: {
+          container:{
+            center:true,
+            padding:'15px'
+          },
+          colors:{
+            accent: '#FF8F9C',
+            blackish: '#1b1b1b',
+          }
+        },
+      },
     async rewrites() {
         return [
             {

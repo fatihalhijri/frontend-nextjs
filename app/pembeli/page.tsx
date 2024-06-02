@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import useBookModule from '../book/lib';
+import useBookModule from '../buku/lib';
 import { useRouter } from 'next/navigation';
 import { useClosure, useConfirmDelete } from '@/hook';
 

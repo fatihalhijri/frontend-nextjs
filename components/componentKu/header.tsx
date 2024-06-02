@@ -1,9 +1,9 @@
 'use client'
-import Link from "next/link";
-import React, { useState } from "react";
-import ShoppingCart from "../componentUas/icons/ShoppingCart";
-import Bars2 from "../componentUas/icons/Bars2";
+import { Bars2Icon } from "@heroicons/react/20/solid";
+import { ShoppingCart } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useState } from "react";
 
 
 function AuthLinks({status, userName}:any) {
@@ -60,7 +60,7 @@ export const Header = () => {
             className="p-1 border"
             onClick={() => setMobileNavOpen((prev) => !prev)}
           >
-            <Bars2 />
+            <Bars2Icon />
           </button>
         </div>
         {mobileNavOpen && (

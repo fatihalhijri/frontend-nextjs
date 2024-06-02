@@ -5,7 +5,6 @@ import ReactQuery from "@/components/ReactQuery";
 import NextAuthProvider from "@/components/NextAuthProvider";
 import { Session } from "next-auth";
 import LoadingPage from "@/components/LoadingPage";
-import Header from "@/components/componentUas/layout/Header";
 import Navbar from "@/components/componentKu/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,7 +28,7 @@ export default function RootLayout({
           <ReactQuery>
 
             <LoadingPage>
-            <Navbar />
+            {/* <Navbar /> */}
               
               {children}
               </LoadingPage>

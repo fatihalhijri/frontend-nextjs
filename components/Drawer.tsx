@@ -4,6 +4,14 @@ import clsx from "clsx";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import Button from "./Button";
 import { useSpring, animated } from "@react-spring/web";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface DrawerProps {
   isOpen: boolean;
@@ -39,9 +47,11 @@ export const Drawer: React.FC<DrawerProps> = ({
         ...springs,
       }}
       className={
-        "shadow-sm  md:w-[50%] lg:w-[30%] xl:w-[20%] w-full md bg-white border border-gray-100 px-5"
+        "shadow-sm inset-0 sticky  z-50 md:w-[50%] lg:w-[30%] xl:w-[20%] w-full  bg-white border border-gray-100 px-5"
       }
     >
+      
+
       <section className="h-[5%] pt-5">
         <section className="flex items-center justify-between">
           <button
@@ -52,6 +62,7 @@ export const Drawer: React.FC<DrawerProps> = ({
           >
             Clear
           </button>
+          {/* <Button ></Button> */}
           <button
             onClick={() => {
               onClose();

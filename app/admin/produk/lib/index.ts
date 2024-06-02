@@ -1,6 +1,10 @@
 "use client";
 import { usePagination, useToast } from "@/hook";
-import { ProdukCreateArrayPayload, ProdukListFilter, ProdukListResponse } from "../interface";
+import {
+  ProdukCreateArrayPayload,
+  ProdukListFilter,
+  ProdukListResponse,
+} from "../interface";
 import { axiosClient } from "@/lib/axiousClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -78,7 +82,7 @@ const useProdukModule = () => {
 
   return {
     useProdukList,
-    useCreateProdukBulk
+    useCreateProdukBulk,
   };
 };
 

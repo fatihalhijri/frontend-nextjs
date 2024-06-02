@@ -8,8 +8,6 @@ interface Produk {
   harga: number |null |any;
   barcode:string; 
   stok:number |null;
-  // created_at: string;
-  // updated_at: string;
   created_by:{
     id:number;
     nama:string;

@@ -22,9 +22,9 @@ import useUploadFile, { FileResponse } from "@/hook/useUploadFile";
 const useAuthModule = () => {
   const { toastError, toastSuccess, toastWarning } = useToast();
   const axiosAuthClient = useAxiosAuth();
-  const {uploadSingle} = useUploadFile();
+  const { uploadSingle } = useUploadFile();
   const { data: session } = useSession();
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const router = useRouter();
 
@@ -35,6 +35,7 @@ const useAuthModule = () => {
   };
 
   const useRegister = () => {
+    const [selectedRole, setSelectedRole] = useState<string>("");
     const [errorValidation, setErrorValidation] = useState<string[]>([]);
     const handleTyping = (name: string) => {
       setErrorValidation((value) => {
@@ -53,11 +54,14 @@ const useAuthModule = () => {
     };
 
     const { mutate, isLoading, isError, error } = useMutation({
-      mutationFn: (payload: RegisterPayload) => register(payload),
+      mutationFn: (payload: RegisterPayload) =>
+        register({ ...payload, role: selectedRole }),
       onSuccess: (response) => {
+        console.log("response", response.data);
         toastSuccess(response.message);
-        router.push("/auth/login");
+        router.push("/login");
       },
+
       // onMutate: () => {
       //   setErrorValidation([]);
       // },
@@ -74,7 +78,16 @@ const useAuthModule = () => {
         toastError();
       },
     });
-    return { mutate, isLoading, isError, error, handleShowError, handleTyping };
+    return {
+      mutate,
+      isLoading,
+      isError,
+      error,
+      handleShowError,
+      handleTyping,
+      selectedRole,
+      setSelectedRole,
+    };
   };
 
   const login = async (payload: LoginPayload): Promise<LoginResponse> => {
@@ -103,7 +116,7 @@ const useAuthModule = () => {
           if (response.data.role === "admin") {
             return router.push("/admin");
           }
-          router.push("/siswa");
+          router.push("/buku");
         },
         onError: (error: any) => {
           if (error.response.status == 422) {
@@ -217,7 +230,7 @@ const useAuthModule = () => {
 
       payload = {
         ...payload,
-        avatar: res.data.file_url,
+        // avatar: res.data.file_url,
       };
     }
 
@@ -257,7 +270,7 @@ const useAuthModule = () => {
     useProfile,
     useLupaPassword,
     useResetPassword,
-    useUpdateProfile
+    useUpdateProfile,
   };
 };
 

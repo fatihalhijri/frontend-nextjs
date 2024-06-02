@@ -12,20 +12,21 @@ export default withAuth(
     //   role = 'admin'
     // }
     
-    if (url.startsWith("/siswa") === true) {
-        if (role != "siswa") {
-            return NextResponse.redirect(new URL("/admin", req.url));
-        } else {
-            return NextResponse.next()
-        }
-    }
-    // if (url.startsWith("/admin") === true) {
-    //   if (role != "admin") {
-    //     return NextResponse.redirect(new URL("/siswa", req.url));
-    //   } else {
-    //     return NextResponse.next()
-    //   }
+    // if (url.startsWith("/siswa") === true) {
+    //     if (role != "siswa") {
+    //         return NextResponse.redirect(new URL("/admin", req.url));
+    //     } else {
+    //         return NextResponse.next()
+    //     }
     // }
+    
+    if (url.startsWith("/admin") === true) {
+      if (role != "admin") {
+        return NextResponse.redirect(new URL("/siswa", req.url));
+      } else {
+        return NextResponse.next()
+      }
+    }
     
     
     return NextResponse.next();

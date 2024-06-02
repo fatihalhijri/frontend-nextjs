@@ -35,43 +35,49 @@ const ResetPw = ({ params }: { params: { id: string; token: string } }) => {
   const { handleChange, handleSubmit, handleBlur, values, errors } = formik;
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8"></div>
-      <div className="flex items-center justify-center w-full">
-        <h1 className="text-3xl text-blue-400">Reset Password</h1>
+    <section
+      className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-cover bg-no-repeat bg-center"
+      style={{ backgroundImage: "url('/backgroundbuku.png')" }}
+    >
+      <div className="max-w-md w-full space-y-8">
+        <div className="bg-white px-8 py-6 shadow rounded sm:px-10">
+          <div className="flex items-center justify-center w-full">
+            <h1 className="text-3xl text-blue-400">Reset Password</h1>
+          </div>
+          <FormikProvider value={formik}>
+            <Form className="space-y-5" onSubmit={handleSubmit}>
+              <section>
+                <Label htmlFor="new_password" title="new_password" />
+                <InputText
+                  value={values.new_password}
+                  placeholder="**********"
+                  id="new_password"
+                  name="new_password"
+                  type="new_password"
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  onBlur={handleBlur}
+                  isError={getIn(errors, "new_password")}
+                  messageError={errors?.new_password}
+                />
+              </section>
+              <section>
+                <Button
+                  height="lg"
+                  title="Reset Password"
+                  colorSchema="blue"
+                  // isLoading={isLoading}
+                  isDisabled={isLoading}
+                />
+                <Link href={"/auth/login"}>
+                  <Button title="Back" colorSchema="green" />
+                </Link>
+              </section>
+            </Form>
+          </FormikProvider>
+        </div>
       </div>
-      <FormikProvider value={formik}>
-        <Form className="space-y-5" onSubmit={handleSubmit}>
-          <section>
-            <Label htmlFor="new_password" title="new_password" />
-            <InputText
-              value={values.new_password}
-              placeholder="**********"
-              id="new_password"
-              name="new_password"
-              type="new_password"
-              onChange={(e) => {
-                handleChange(e);
-              }}
-              onBlur={handleBlur}
-              isError={getIn(errors, "new_password")}
-              messageError={errors?.new_password}
-            />
-          </section>
-          <section>
-            <Button
-              height="lg"
-              title="Reset Password"
-              colorSchema="blue"
-              // isLoading={isLoading}
-              isDisabled={isLoading}
-            />
-            <Link href={"/auth/login"}>
-              <Button title="Back" colorSchema="green" />
-            </Link>
-          </section>
-        </Form>
-      </FormikProvider>
     </section>
   );
 };

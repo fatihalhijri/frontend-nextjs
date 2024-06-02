@@ -34,8 +34,10 @@ const LupaPassword = ({ params }: any) => {
   const { handleChange, handleSubmit, handleBlur, values, errors } = formik;
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: "url('/backgroundbuku.png')" }}>
       <div className="max-w-md w-full space-y-8">
+        <div className="bg-white py-8 px-6 shadow rounded sm:px-10">
+
         <div className="flex items-center justify-center w-full">
           <h1 className="text-2xl font-bold text-red-500">Lupa Password</h1>
         </div>
@@ -52,7 +54,7 @@ const LupaPassword = ({ params }: any) => {
                 onBlur={handleBlur}
                 isError={getIn(errors, "email")}
                 messageError={getIn(errors, "email")}
-              />
+                />
             </section>
             <section>
               <Button
@@ -61,7 +63,7 @@ const LupaPassword = ({ params }: any) => {
                 colorSchema="blue"
                 // isLoading={isLoading}
                 isDisabled={isLoading}
-              />
+                />
               <br />
               <br />
               <Link href={"/auth/login"}>
@@ -70,6 +72,7 @@ const LupaPassword = ({ params }: any) => {
             </section>
           </Form>
         </FormikProvider>
+                </div>
       </div>
     </section>
   );

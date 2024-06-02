@@ -3,27 +3,30 @@
 @tailwind utilities;
 
 
-.item1 {
-    grid-column: 1 / span 2;
-    grid-row: 1;
-  }
-  
+.loader {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
 
-.item2 {
-    grid-column: 3;
-    grid-row: 1 / span 2;
-  }
+.loader .spinner {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #4f46e5;
+  border-radius: 50%;
+  animation: spinner 1.2s linear infinite;
+  border-color: #4f46e5 transparent transparent transparent;
+}
 
-  .grid-container {
-    display: grid;
-    gap: 10px;
-    background-color: #2196F3;
-    padding: 10px;
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .grid-item {
-    background-color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    padding: 20px;
-    font-size: 30px;
+  100% {
+    transform: rotate(360deg);
   }
+}

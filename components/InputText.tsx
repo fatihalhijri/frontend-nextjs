@@ -24,9 +24,9 @@ const InputText: React.FC<
         value={value}
         id={id}
         name={name}
-        className={clsx(`w-full h-10 border rounded px-2`, {
+        className={clsx(`w-full h-10 border rounded px-3 py-2 focus:outline-none focus:ring-1 focus:border-blue-200 `, {
           "border-red-500 border-2": isError,
-          "border-gray-700": !isError,
+          "border-slate-500": !isError,
         })}
         {...props}
       />

@@ -91,6 +91,27 @@ export const authOptions: NextAuthOptions = {
       }
     },
   },
+  // callbacks: {
+  //   async jwt({ token, user, account, trigger, session }) {
+  //     if (trigger === "update") {
+  //       return { ...token, ...session.user };
+  //     }
+
+  //     return {
+  //       ...token,
+  //       ...user,
+  //     };
+  //   },
+  //   async session({ session, user, token }) {
+  //     session.user.id = Number(token.id);
+  //     session.user.name = token.name;
+  //     session.user.email = token.email;
+  //     session.user.accessToken = token.accessToken;
+  //     session.user.refreshToken = token.refreshToken;
+
+  //     return session;
+  //   },
+  // },
   pages: {
     signIn: "/auth/login",
     signOut: "/auth/login",

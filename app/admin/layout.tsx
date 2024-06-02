@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <div className="grid grid-cols-7 h-screen w-screen">
-        <div className="bg-red-500 space-y-5 px-4">
+        <div className="bg-red-500 space-y-5 px-4 ">
           {pathname}
           <h1 className="text-3xl text-blue-300 font-sans">AplikasiKu</h1>
           {menus.map((item, index) => (
@@ -64,7 +64,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           ))}
         </div>
         <div className="col-span-6">{children}</div>
+
       </div>
+      <div className=""></div>
     </>
   );
 }
