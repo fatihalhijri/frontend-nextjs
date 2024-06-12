@@ -35,7 +35,7 @@ const useAuthModule = () => {
   };
 
   const useRegister = () => {
-    const [selectedRole, setSelectedRole] = useState<string>("");
+    // const [selectedRole, setSelectedRole] = useState<string>("");
     const [errorValidation, setErrorValidation] = useState<string[]>([]);
     const handleTyping = (name: string) => {
       setErrorValidation((value) => {
@@ -54,8 +54,7 @@ const useAuthModule = () => {
     };
 
     const { mutate, isLoading, isError, error } = useMutation({
-      mutationFn: (payload: RegisterPayload) =>
-        register({ ...payload, role: selectedRole }),
+      mutationFn: (payload: RegisterPayload) => register({ ...payload }),
       onSuccess: (response) => {
         console.log("response", response.data);
         toastSuccess(response.message);
@@ -85,8 +84,8 @@ const useAuthModule = () => {
       error,
       handleShowError,
       handleTyping,
-      selectedRole,
-      setSelectedRole,
+      // selectedRole,
+      // setSelectedRole,
     };
   };
 
@@ -116,7 +115,13 @@ const useAuthModule = () => {
           if (response.data.role === "admin") {
             return router.push("/admin");
           }
-          router.push("/buku");
+          if (response.data.role === "petugas") {
+            return router.push("/petugas");
+          }
+          if (response.data.role === "peminjam") {
+            return router.push("/peminjam");
+          }
+          // router.push("/peminjam");
         },
         onError: (error: any) => {
           if (error.response.status == 422) {
@@ -224,15 +229,15 @@ const useAuthModule = () => {
   const updateProfile = async (
     payload: ProfileUpdatePayload
   ): Promise<ProfileResponse> => {
-    if (payload.file !== undefined) {
-      const res = await uploadSingle(payload.file);
-      console.log("res", res);
+    // if (payload.file !== undefined) {
+    //   const res = await uploadSingle(payload.file);
+    //   console.log("res", res);
 
-      payload = {
-        ...payload,
-        // avatar: res.data.file_url,
-      };
-    }
+    //   payload = {
+    //     ...payload,
+    //     // avatar: res.data.file_url,
+    //   };
+    // }
 
     return axiosAuthClient
       .put("/profile/update", payload)
@@ -246,6 +251,7 @@ const useAuthModule = () => {
         onSuccess: async (response) => {
           toastSuccess(response.message);
           queryClient.invalidateQueries(["/auth/profile"]);
+          // router.push("/admin");
         },
         onError: (error: any) => {
           if (error.response.status == 422) {

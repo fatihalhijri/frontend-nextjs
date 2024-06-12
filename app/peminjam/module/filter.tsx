@@ -28,11 +28,13 @@ export const option = [
   },
 ];
 
+// const { optionKategori } = useOptions();
+// console.log(" option Kategori", optionKategori);
+
 const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
   const handleChange = (e: ChangeEvent<any>) => {
-    
     // //cara pak ihsan
-    
+
     // if(e.target.name ='to_year'){
     //   if(Number(params.dari_tahun) >e.target.value){
     //     return alert(`pilih sampai tahun lebih atau sama dengan tahun ${params.dari_tahun}`)
@@ -55,9 +57,8 @@ const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
     //     [e.target.name]:e.target.value,
     //   }
     // })
-    
-    // ~~~~~~
 
+    // ~~~~~~
 
     const { name, value } = e.target;
 
@@ -66,10 +67,13 @@ const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
         return {
           ...prevParams,
           dari_tahun: value,
-          to_year: "",
+          ke_tahun: "",
         };
       });
-    } else if (name === "to_year" && Number(value) < Number(params.dari_tahun)) {
+    } else if (
+      name === "to_year" &&
+      Number(value) < Number(params.dari_tahun)
+    ) {
       alert("pilih tahun yang lebih atau sama");
     } else {
       setParams((prevParams: BukuListFilter) => {
@@ -79,7 +83,6 @@ const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
         };
       });
     }
-
   };
 
   return (
@@ -133,6 +136,16 @@ const Filter: React.FC<FilterProps> = ({ params, setParams }) => {
           id="penerbit"
         />
       </section>
+      {/* <section>
+        <Label title="kategori" htmlFor="kategori" />
+        <Select
+          onChange={handleChange}
+          options={optionKategori}
+          value={params.kategori_id}
+          name="kategori"
+          id="kategori"
+        />
+      </section>  */}
       <section>
         <Label title="dari_tahun" htmlFor="dari_tahun" />
         <Select

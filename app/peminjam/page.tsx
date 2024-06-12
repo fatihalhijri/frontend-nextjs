@@ -1,7 +1,6 @@
 "use client";
 import { Pagination } from "@/components/Pagination";
 
-
 import Button from "@/components/Button";
 import { Drawer } from "@/components/Drawer";
 import { useClosure } from "@/hook/useClosure";
@@ -9,21 +8,37 @@ import { useConfirmDeleteBulk } from "@/hook/useConfirmBulkDelete";
 import { useConfirmDelete } from "@/hook/useConfirmDelete";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useBukuModule from "./lib";
 import Filter from "./module/filter";
 
 const Buku = () => {
-  const { useBukuList, useDeleteBuku, useDeleteBulkBuku } = useBukuModule();
+  const { useBukuList, useDeleteBuku, useDeleteBulkBuku, useKategoriAll } =
+    useBukuModule();
   const [deletePayload, setDeletePayload] = useState<number[]>([]);
   const { data: session, status } = useSession();
+  // const {data,isFetching,} = useKategoriAll()
 
-  
   const router = useRouter();
   const { mutate, isLoading } = useDeleteBuku();
   const { mutate: mutateDeleteBulk, isLoading: isLoadingDeleteBulk } =
     useDeleteBulkBuku();
 
+  // useEffect(() => {
+  //   if (session) {
+  //     if (session.user.role !== "peminjam") {
+  //       router.push("/notaccess");
+        
+  //     } 
+  //     // if (session.user.role == "admin") {
+  //     //   router.push("/admin");
+  //     // } else {
+  //     //   router.push("/peminjam");
+  //     // }
+  //   }
+  // }, [session, router]);
+
+  console.log("session", session);
   const {
     data,
     isFetching,
@@ -84,131 +99,52 @@ const Buku = () => {
       </Drawer>
       {/* {JSON.stringify(params)} */}
       <section className=" container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* {isFetching ? "loading" : ""} */}
-        <div className="grid grid-cols-5 gap-5 py-5">
-          <Button title="filter" onClick={onOpen} colorSchema="blue"></Button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 py-10 ">
+          <div
+            className="relative border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 text-xl font-serif text-center md:h-20 h-20 flex justify-center items-center bg-cover bg-center bg-no-repeat"
+            onClick={onOpen}
+            style={{ backgroundImage: "url('/buku2.jpg')" }}
+          >
+            <div className="absolute inset-0 bg-black opacity-60"></div>
+            <div className="relative z-10 text-white">Filter Buku</div>
+          </div>
+          <div className=""></div>
+          <div className=""></div>
+          <div className=""></div>
+          <div
+            className="relative border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 text-xl font-serif text-center md:h-20 h-20 flex justify-center items-center bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/buku2.jpg')" }}
+            onClick={() => {
+              // useKategoriAll();
+              router.push("/peminjam/kategoriall");
+            }}
+          >
+            <div className="absolute inset-0 bg-black opacity-60"></div>
+            <div className="relative z-10 text-white">Semua Buku</div>
+          </div>
 
-          <Button
-            width="sm"
-            onClick={() => {
-              handleDeleteBulk(deletePayload);
-            }}
-            // isLoading={isLoadingDeleteBulk}
-            colorSchema="red"
-            isDisabled={deletePayload.length === 0}
-            title="Hapus "
-          />
-          <Button
-            onClick={() => {
-              router.push("/buku/tambah");
-            }}
-            width="sm"
-            colorSchema="red"
-            title="tambah"
-          />
-
-          <Button
-            onClick={() => {
-              router.push("/buku/tambah-bulk");
-            }}
-            height="md"
-            width="sm"
-            colorSchema="green"
-            title="tambah bulk"
-          />
+          <div
+            className="relative border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 text-xl font-serif text-center md:h-20 h-20 flex justify-center items-center bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/buku5.jpg')" }}
+          >
+            <div className="absolute inset-0 bg-black opacity-60"></div>
+            <div className="relative z-10 text-white">Biografi</div>
+          </div>
+          <div
+            className="relative border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 text-xl font-serif text-center md:h-20 h-20 flex justify-center items-center bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/buku3.jpg')" }}
+          >
+            <div className="absolute inset-0 bg-black opacity-60"></div>
+            <div className="relative z-10 text-white">Non-Fiksi</div>
+          </div>
+          <div
+            className="relative border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 text-xl font-serif text-center md:h-20 h-20 flex justify-center items-center bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/buku4.jpg')" }}
+          >
+            <div className="absolute inset-0 bg-black opacity-60"></div>
+            <div className="relative z-10 text-white">Fiksi</div>
+          </div>
         </div>
-        {/* <Table>
-          <Thead>
-            <Tr>
-              <Th scope="col">
-                <div className="flex items-center gap-x-3">
-                  <input
-                    checked={checked.isAllCheced}
-                    onChange={() => {
-                      if (checked.isAllCheced) {
-                        setDeletePayload([]);
-                      } else {
-                        setDeletePayload((state) => {
-                          if (!data) {
-                            return [];
-                          }
-                          
-                          const selected: number[] = Array.from(
-                            new Set([
-                              ...state,
-                              ...data?.data?.map((n) => Number(n.id)),
-                            ])
-                          );
-
-                          return [...selected];
-                        });
-                      }
-                    }}
-                    type="checkbox"
-                    className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                    />
-                </div>
-              </Th>
-              <Th scope="col">No</Th>
-              <Th scope="col">judul</Th>
-              <Th scope="col">Penulis</Th>
-              <Th scope="col">Penerbit</Th>
-              <Th scope="col">TahunTerbit</Th>
-              <Th scope="col">Aksi</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data?.data?.map((item, index) => (
-              <Tr key={index}>
-                <Td>
-                  <input
-                    checked={deletePayload.includes(item.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setDeletePayload((state) => [...state, item.id]);
-                      } else {
-                        const filtered = deletePayload.filter(
-                          (n) => n !== item.id
-                        );
-                        setDeletePayload(filtered);
-                      }
-                    }}
-                    type="checkbox"
-                    className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                  />
-                </Td>
-                <Td>
-                  <span>{(params.page - 1) * params.pageSize + index + 1}</span>
-                </Td>
-                <Td>
-                  <span>{item.judul}</span>
-                </Td>
-                <Td>
-                  <span>{item.penulis}</span>
-                </Td>
-                <Td>
-                  <span>{item.penerbit}</span>
-                </Td>
-                <Td>
-                  <span>{item.tahunTerbit}</span>
-                </Td>
-                <Td>
-                  <DeleteButton
-                    isLoading={isLoading}
-                    onClick={() => {
-                      handleDelete(item.id || 0);
-                    }}
-                    />
-                  <EditButton
-                    onClick={() => {
-                      router.push(`buku/edit/${item.id}`);
-                    }}
-                    />
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table> */}
 
         <div className="">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -217,15 +153,10 @@ const Buku = () => {
                 key={index}
                 className="bg-white border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 "
                 onClick={() => {
-                  router.push(`buku/detail/${item.id}`);
+                  router.push(`peminjam/detail/${item.id}`);
                 }}
               >
-                {/* <img
-                  src={item.imageUrl}
-                  alt={item.judul}
-                  className="w-full h-48 object-cover"
-                /> */}
-                <div className="p-4" >
+                <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">{item.judul}</h2>
                   <p className="text-gray-700 mb-1">
                     Penerbit: {item.penerbit}
@@ -234,20 +165,7 @@ const Buku = () => {
                   <p className="text-green-600 font-bold mb-4">
                     tahunTerbit: {item.tahunTerbit}
                   </p>
-                  <Button colorSchema="blue" title="Pinjam Buku Ini" >
-                    {/* Pinjam Buku Ini */}
-                  </Button>
-                  {/* <DeleteButton
-                    isLoading={isLoading}
-                    onClick={() => {
-                      handleDelete(item.id || 0);
-                    }}
-                    />
-                  <EditButton
-                    onClick={() => {
-                      router.push(`buku/edit/${item.id}`);
-                    }}
-                    /> */}
+                  <Button colorSchema="blue" title="Pinjam Buku Ini"></Button>
                 </div>
               </div>
             ))}

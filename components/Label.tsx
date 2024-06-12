@@ -10,7 +10,7 @@ const Label: React.FC<LabelProps> = ({
   isRequired = false,
 }) => {
   return (
-    <label htmlFor={htmlFor} className="w-16 font-semibold text-base h-8  capitalize  ">
+    <label htmlFor={htmlFor} className=" font-semibold text-base h-8  capitalize  ">
       {title} {isRequired ? <span className="text-red-500">*</span> : <></>}
     </label>
   );

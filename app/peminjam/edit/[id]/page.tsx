@@ -62,15 +62,15 @@ const UpdateBuku = ({ params }: { params: { id: string } }) => {
     setValues,
   } = formik;
 
-  if (isFetching) {
-    if (isFetching) {
-      return (
-        <p className="text-5xl text-center ">
-          Loading................................
-        </p>
-      );
-    }
-  }
+  // if (isFetching) {
+  //   if (isFetching) {
+  //     return (
+  //       <p className="text-5xl text-center ">
+  //         Loading................................
+  //       </p>
+  //     );
+  //   }
+  // }
   return (
     <section className="flex items-center  justify-center w-full h-full">
       <section className="w-1/2">

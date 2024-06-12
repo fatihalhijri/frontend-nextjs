@@ -1,7 +1,9 @@
 "use client";
 import { Globe } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import Router from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FiHeart } from "react-icons/Fi";
 import { HiOutlineShoppingBag } from "react-icons/Hi";
@@ -9,12 +11,23 @@ import { BiUser } from "react-icons/bi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const { data: session, status } = useSession();
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+  };
+  const handleLogout = async () => {
+    try {
+      await signOut({ redirect: false });
+      setTimeout(() => {
+        router.replace('/login');
+      }, 500); // Adjust the delay as needed
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
   };
 
   return (
@@ -68,76 +81,88 @@ const Navbar = () => {
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-between">
             <div className="flex-shrink-0">
               <Link href="/">
-                <p className="text-white text-xl font-bold font-serif navbar__link relative ">PustakaOnline</p>
+                <p className="text-white text-xl font-bold font-serif navbar__link relative ">
+                  PustakaOnline
+                </p>
               </Link>
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
-                <Link href="/">
+                <Link href="/home">
                   <p className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                    Home
+                    Beranda
                   </p>
                 </Link>
                 <Link href="/about">
                   <p className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                    About
+                    Tentang
                   </p>
                 </Link>
-                <Link href="/services">
+                {/* <Link href="/services">
                   <p className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                     Services
                   </p>
-                </Link>
+                </Link> */}
                 <Link href="/contact">
                   <p className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                    Contact
+                    Kontak
                   </p>
                 </Link>
                 <div className="hidden lg:flex gap-4 text-gray-500 text-[30px]">
-          <div className="flex justify-center items-center">
-            {/* <p className="text-base px-2">
+                  <div className="flex justify-center items-center">
+                    {/* <p className="text-base px-2">
               hello..{JSON.stringify(session?.user?.name)}
             </p>
             <BiUser className="" /> */}
-            <div className="relative inline-block text-left">
-              <div className="flex justify-center items-center">
-                <p className="text-gray-300  hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                  hello..{JSON.stringify(session?.user?.name)}
-                </p>
-                <BiUser className="cursor-pointer " onClick={toggleDropdown} />
-              </div>
+                    <div className="relative inline-block text-left">
+                      <div className="flex justify-center items-center">
+                        <p className="text-gray-300  hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                          hello..{JSON.stringify(session?.user?.name)}
+                        </p>
+                        <BiUser
+                          className="cursor-pointer "
+                          onClick={toggleDropdown}
+                        />
+                      </div>
 
-              {isOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
-                  <div className="py-1">
-                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      <Link href="/edit-profile">Edit User</Link>
-                    </a>
-                    <button
-                      onClick={() => console.log("Logging out...")}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Logout
-                    </button>
+                      {isOpen && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
+                          <div className="py-1">
+                            <p className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                              <Link href="/admin/profile/update">
+                                Edit User
+                              </Link>
+                            </p>
+                            <button
+                              // onClick={() => {
+                              //   signOut({ redirect: false }).then(() =>
+                              //     router.push("auth/login")
+                              //   );
+                              // }}
+                              onClick={handleLogout}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Logout
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          </div>
 
-          <div className="relative">
-            <FiHeart></FiHeart>
-            <div className="bg-red-600 rounded-full absolute top-0 right-0 w-[18px] h-[18px] text-[12px] text-white grid place-items-center translate-x-1 -translate-y-1">
-              0
-            </div>
-          </div>
-          <div className="">
-            <Globe size={28}></Globe>
-            {/* <div className="bg-red-600 rounded-full absolute top-0 right-0 w-[18px] h-[18px] text-[12px] text-white grid place-items-center translate-x-1 -translate-y-1">
+                  <div className="relative">
+                    <FiHeart></FiHeart>
+                    <div className="bg-red-600 rounded-full absolute top-0 right-0 w-[18px] h-[18px] text-[12px] text-white grid place-items-center translate-x-1 -translate-y-1">
+                      0
+                    </div>
+                  </div>
+                  <div className="">
+                    <Globe size={28}></Globe>
+                    {/* <div className="bg-red-600 rounded-full absolute top-0 right-0 w-[18px] h-[18px] text-[12px] text-white grid place-items-center translate-x-1 -translate-y-1">
               0
             </div> */}
-          </div>
-        </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

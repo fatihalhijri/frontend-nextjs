@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { signOut, useSession } from "next-auth/react";
 import { useToast } from "./useToast";
@@ -37,7 +37,7 @@ const useAxiosAuth = () => {
             ] = `Bearer ${session?.user?.accessToken}`;
             return axiosClient(prevRequest);
           } catch (err) {
-            signOut()
+            signOut();
             window.location.replace("/auth/login");
           }
         } else {

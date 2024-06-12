@@ -1,17 +1,9 @@
 "use client";
 import clsx from "clsx";
-
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import Button from "./Button";
 import { useSpring, animated } from "@react-spring/web";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import Button from "./Button";
+import { TrashIcon, XIcon } from "lucide-react";
 
 interface DrawerProps {
   isOpen: boolean;
@@ -31,50 +23,44 @@ export const Drawer: React.FC<DrawerProps> = ({
   onClose,
 }) => {
   const springs = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: 1 },
+    from: { opacity: 0, transform: "translateX(100%)" },
+    to: { opacity: isOpen ? 1 : 0, transform: isOpen ? "translateX(0)" : "translateX(100%)" },
   });
 
   return (
     <animated.div
       style={{
         height: "100vh",
-
         right: 0,
-        position: "absolute",
+        top: 0,
+        position: "fixed", // Use fixed position to prevent scroll
         zIndex: 50,
-        ...(!isOpen && { display: "none" }),
         ...springs,
       }}
-      className={
-        "shadow-sm inset-0 sticky  z-50 md:w-[50%] lg:w-[30%] xl:w-[20%] w-full  bg-white border border-gray-100 px-5"
-      }
+      className="shadow-lg  z-50 md:w-[50%] lg:w-[30%] xl:w-[25%] w-full bg-white border border-gray-200 flex flex-col"
     >
-      
-
-      <section className="h-[5%] pt-5">
-        <section className="flex items-center justify-between">
+      <section className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <h5 className="text-gray-700 text-lg font-bold">{title}</h5>
+        <div className="flex items-center space-x-2">
           <button
             onClick={() => {
               onClear();
               onClose();
             }}
+            className="text-gray-500 hover:text-red-500 transition-colors duration-200"
           >
-            Clear
+            <TrashIcon className="h-5 w-5" />
           </button>
-          {/* <Button ></Button> */}
           <button
-            onClick={() => {
-              onClose();
-            }}
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
           >
-            Close
+            <XIcon className="h-5 w-5" />
           </button>
-        </section>
-        <h5 className="text-gray-600 text-lg font-bold">{title}</h5>
+        </div>
       </section>
-      <section className="h-[90%] py-5">{children}</section>
-      <section className="absolute right-0 left-0 bottom-1 px-5 py-2">
+      <section className="flex-1 overflow-y-auto p-5">{children}</section>
+      <section className="px-5 py-8 pb-10 border-t border-gray-100">
         <Button
           onClick={() => {
             onSubmit();

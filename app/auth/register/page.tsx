@@ -27,13 +27,17 @@ export const registerSchema = yup.object().shape({
     .required("wajib diisi")
     .min(8, "minimal 8 karakter"),
   alamat: yup.string().nullable().default("").required("wajib diisi"),
-  role: yup.string().nullable().default(undefined).required("Wajib pilih"),
+  role: yup.string().nullable().default('').required("Wajib pilih"),
 });
 export const option = [
   // {
   //   value: "",
   //   label: "Pilih",
   // },
+  {
+    value: "petugas",
+    label: "pilih",
+  },
   {
     value: "admin",
     label: "Admin",
@@ -47,9 +51,9 @@ const Register = () => {
   const [isEmailActive, setIsEmailActive] = useState(false);
   const [isPasswordActive, setIsPasswordActive] = useState(false);
   const { useRegister } = useAuthModule();
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRole(e.target.value);
-  };
+  // const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedRole(e.target.value);
+  // };
   const {
     mutate,
     isLoading,
@@ -57,8 +61,8 @@ const Register = () => {
     error,
     handleShowError,
     handleTyping,
-    selectedRole,
-    setSelectedRole,
+    // selectedRole,
+    // setSelectedRole,
   } = useRegister();
   const formik = useFormik<RegisterPayload>({
     initialValues: registerSchema.getDefault(),

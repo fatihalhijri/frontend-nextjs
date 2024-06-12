@@ -8,12 +8,8 @@ declare module "next-auth" {
       name: string | undefined | null;
       accessToken: any;
       refreshToken: any;
-      token : any
-      role:string |any
-
-
+      token: any;
+      role: string | any;
     };
-
-
   }
 }

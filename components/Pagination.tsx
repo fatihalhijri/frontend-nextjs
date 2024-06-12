@@ -6,8 +6,8 @@ interface PaginationProps {
   handlePageSize: (e: ChangeEvent<any>) => void;
   handlePage: (page: number) => void;
 
-  page: number | string |undefined;
-  pageSize: number | string |undefined;
+  page: number | string | undefined;
+  pageSize: number | string | undefined;
 
   pagination:
     | {
@@ -16,8 +16,8 @@ interface PaginationProps {
         total: number;
         total_page?: number;
       }
-      | undefined;
-    }
+    | undefined;
+}
 
 export const Pagination: React.FC<PaginationProps> = ({
   handlePageSize,
